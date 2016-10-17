@@ -115,16 +115,38 @@ public class SevenCenter implements IPlayListener
         }
     }
 
+    public interface IRoundListener
+    {
+        public void finished(int playerIndex);
+    }
+
+    public void registerRoundListener(IRoundListener roundListener)
+    {
+        mRoundListener = roundListener;
+    }
+
+    IRoundListener mRoundListener;
     public class PlayThread extends Thread
     {
         public void run()
         {
-            while(true)
+            boolean finished = false;
+            while(!finished)
             {
 
                 for(int i = 0; i < mPlayerList.size(); i++)
                 {
                     mPlayerList.get(i).play(i);
+
+                    if(mPlayerList.get(i).isFinished())
+                    {
+                        if(mRoundListener != null)
+                        {
+                            mRoundListener.finished(i);
+                            finished = true;
+                            break;
+                        }
+                    }
 
                     waitForNextPlay();
                 }

@@ -15,9 +15,6 @@ public class Player
     boolean mIsFemale = true;
 
     boolean mInteractive = false;
-
-    ArrayList<ArrayList<Card>> mSortedHand;
-
     IPlayListener mPlayListener;
 
     Brain mBrain;
@@ -101,9 +98,16 @@ public class Player
 
         Card c = mBrain.getNextCard();
 
+        mBrain.remove(c);
+
         if (mPlayListener != null)
         {
             mPlayListener.play(playerIndex, c);
         }
+    }
+
+    public boolean isFinished()
+    {
+        return mBrain.isFinished();
     }
 }

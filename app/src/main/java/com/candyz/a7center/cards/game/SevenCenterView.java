@@ -5,6 +5,7 @@ import com.candyz.a7center.cards.model.Hand;
 import com.candyz.a7center.cards.model.IPlayListener;
 import com.candyz.a7center.cards.view.BaseView;
 import com.candyz.a7center.cards.view.CardView;
+import com.candyz.a7center.cards.view.ChatView;
 import com.candyz.a7center.cards.view.DisplayBundle;
 import com.candyz.a7center.cards.view.HandView;
 import com.candyz.a7center.cards.view.TableView;
@@ -17,13 +18,16 @@ import java.util.ArrayList;
  * Created by u on 03.10.2016.
  */
 
-public class SevenCenterView extends BaseView implements IPlayListener
+public class SevenCenterView extends BaseView implements IPlayListener, SevenCenter.IRoundListener
 {
     SevenCenter mSevenCenter;
 
     TableView mTableView;
 
     final float mTableViewWidthPercent = 0.8f;
+    final float mTableViewHeightPercent = 0.8f;
+
+    ChatView mChatView;
 
 
 
@@ -32,11 +36,19 @@ public class SevenCenterView extends BaseView implements IPlayListener
         super("background.png", dispBundle);
 
         mSevenCenter = sevenCenter;
+        mSevenCenter.registerRoundListener(this);
         ArrayList<HandView> handViews = createHandViews();
-        mTableView = new TableView(sevenCenter.getPlayerList(), handViews, sevenCenter.getTray(), mDispBundle.mCamera.getWidth() * mTableViewWidthPercent, mDispBundle.mCamera.getHeight(), dispBundle);
+        mTableView = new TableView(sevenCenter.getPlayerList(), handViews, sevenCenter.getTray(),
+                mDispBundle.mCamera.getWidth() * mTableViewWidthPercent, mDispBundle.mCamera.getHeight() * mTableViewHeightPercent, dispBundle);
 
         mSevenCenter.registerPlayListener(this);
         loadPlayButtonGraphics();
+
+        mChatView = new ChatView(dispBundle);
+        mChatView.setPosition(0, mTableView.getHeight());
+        mChatView.setHeight(mDispBundle.mCamera.getHeight() - mTableView.getHeight());
+        mChatView.setWidth(mTableView.getWidth());
+        mChatView.show();
     }
 
     BaseView mPlayButton;
@@ -106,6 +118,12 @@ public class SevenCenterView extends BaseView implements IPlayListener
                 mSevenCenter.playCardFinished();
             }
         });
+
+    }
+
+    @Override
+    public void finished(int playerIndex)
+    {
 
     }
 }

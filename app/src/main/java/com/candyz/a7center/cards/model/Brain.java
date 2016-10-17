@@ -71,4 +71,40 @@ abstract public class Brain
     }
 
     abstract public Card getNextCard();
+
+    public void remove(Card c)
+    {
+        if(c != null)
+        {
+            mSortedHand.get(c.getSuit() - 1).remove(c);
+        }
+
+    }
+
+    public boolean isFinished()
+    {
+        boolean finished = true;
+        for(int i = 0; i < mSortedHand.size(); i++)
+        {
+            if(mSortedHand.get(i).size() > 0)
+            {
+                finished = false;
+                break;
+            }
+        }
+        return finished;
+    }
+
+    public int getPenalty()
+    {
+        int penalty = 0;
+        for(int i = 0; i < mSortedHand.size(); i++)
+        {
+            for(int j = 0; j < mSortedHand.get(i).size(); j++)
+            {
+                penalty += mSortedHand.get(i).get(j).getNumber();
+            }
+        }
+        return penalty;
+    }
 }
