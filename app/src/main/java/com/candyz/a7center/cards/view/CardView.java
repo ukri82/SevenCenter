@@ -31,18 +31,28 @@ public class CardView extends BaseView
     Card mCard;
     boolean mIsOpen = false;
 
+    static final int mOrigCardWidth = 72;
+    static final int mOrigCardHeight = 96;
+
+    private ArrayList<Line> mBorderLines;
+
     public CardView(Card card, DisplayBundle displayBundle)
     {
-        super(card.getBackImageURL(), displayBundle);
+        super(card.getBackImageURL(), mOrigCardWidth, mOrigCardHeight, displayBundle);
 
         mCard = card;
 
+        //mTextureAtlas = cardAtlas;
         loadBgGraphics();
+
+        show();
+
+        //load();
     }
 
     private void loadBgGraphics()
     {
-        mFgTextureAtlas = new BuildableBitmapTextureAtlas(mDispBundle.mTextureManager, 1024, 1024, TextureOptions.BILINEAR);
+        mFgTextureAtlas = new BuildableBitmapTextureAtlas(mDispBundle.mTextureManager, mOrigCardWidth, mOrigCardHeight, TextureOptions.BILINEAR);
         mCardFgRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mFgTextureAtlas, mDispBundle.mContext, mCard.getImageURL());
         try
         {
@@ -57,31 +67,55 @@ public class CardView extends BaseView
         mCardFgSprite = createSprite(mCardFgRegion, mWidth, mHeight);
     }
 
+    /*private void load()
+    {
+        //mFgTextureAtlas = new BuildableBitmapTextureAtlas(mDispBundle.mTextureManager, 1024, 1024, TextureOptions.BILINEAR);
+
+        mCardFgRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mTextureAtlas, mDispBundle.mContext, mCard.getImageURL());
+
+        loadGraphics();
+
+        mCardFgSprite = createSprite(mCardFgRegion, mWidth, mHeight);
+    }*/
+
     private void createBorder()
     {
         if(mBorderLines == null)
         {
             mBorderLines = new ArrayList<>();
-            float left = mSprite.getX() - 1;
-            float top = mSprite.getY() - 1;
-            float right = mSprite.getX() + mSprite.getWidth() + 1;
-            float bottom = mSprite.getY() + mSprite.getHeight() + 1;
-            mBorderLines.add(new Line(left, top, right, top, mDispBundle.mVBOM));
-            mBorderLines.add(new Line(right, top, right, bottom, mDispBundle.mVBOM));
-            mBorderLines.add(new Line(right, bottom, left, bottom, mDispBundle.mVBOM));
-            mBorderLines.add(new Line(left, bottom, left, top, mDispBundle.mVBOM));
+            mBorderLines.add(new Line(0, 0, 0, 0, mDispBundle.mVBOM));
+            mBorderLines.add(new Line(0, 0, 0, 0, mDispBundle.mVBOM));
+            mBorderLines.add(new Line(0, 0, 0, 0, mDispBundle.mVBOM));
+            mBorderLines.add(new Line(0, 0, 0, 0, mDispBundle.mVBOM));
 
             for (int i = 0; i < mBorderLines.size(); i++)
             {
-                mBorderLines.get(i).setLineWidth(2f);
+                mBorderLines.get(i).setLineWidth(4f);
             }
         }
     }
 
-    private ArrayList<Line> mBorderLines;
+    private void setBorderPosition()
+    {
+        if(mBorderLines != null)
+        {
+            float left = mSprite.getX() - 1;
+            float top = mSprite.getY() - 1;
+            float right = mSprite.getX() + mSprite.getWidth() + 1;
+            float bottom = mSprite.getY() + mSprite.getHeight() + 1;
+
+            mBorderLines.get(0).setPosition(left, top, right, top);
+            mBorderLines.get(1).setPosition(right, top, right, bottom);
+            mBorderLines.get(2).setPosition(right, bottom, left, bottom);
+            mBorderLines.get(3).setPosition(left, bottom, left, top);
+        }
+    }
+
+
     public void highlight()
     {
         createBorder();
+        setBorderPosition();
 
         for (int i = 0; i < mBorderLines.size(); i++)
         {
@@ -106,17 +140,20 @@ public class CardView extends BaseView
     {
         super.setPosition(x, y);
         mCardFgSprite.setPosition(x, y);
+        setBorderPosition();
     }
 
     public void setWidth(float w)
     {
         super.setWidth(w);
         mCardFgSprite.setWidth(w);
+        setBorderPosition();
     }
     public void setHeight(float h)
     {
         super.setHeight(h);
         mCardFgSprite.setHeight(h);
+        setBorderPosition();
     }
 
     public Card getCard()
@@ -131,19 +168,31 @@ public class CardView extends BaseView
 
     public void close()
     {
-        mDispBundle.mScene.detachChild(mCardFgSprite);
-        show();
-        mIsOpen = false;
+        if(mIsOpen == true)
+        {
+            mDispBundle.mScene.detachChild(mCardFgSprite);
+            show();
+            mIsOpen = false;
+        }
     }
 
     public void open()
     {
-        hide();
-        mDispBundle.mScene.attachChild(mCardFgSprite);
-        mIsOpen = true;
+        if(mIsOpen == false)
+        {
+            hide();
+            mDispBundle.mScene.attachChild(mCardFgSprite);
+            mIsOpen = true;
+        }
     }
 
+    public void reset()
+    {
+        removeHighlight();
 
+        setWidth(mOrigCardWidth);
+        setHeight(mOrigCardHeight);
+    }
 
     public void setClickable(boolean flag, final ICardClickHandler cardClickHandler)
     {

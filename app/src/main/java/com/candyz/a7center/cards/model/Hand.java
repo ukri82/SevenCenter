@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class Hand
 {
     ArrayList<Card> mCards = new ArrayList<>();
-    boolean mIsOpen = false;
 
     public Hand(ArrayList<Card> cards)
     {
@@ -26,13 +25,4 @@ public class Hand
         return mCards;
     }
 
-    public void open()
-    {
-        mIsOpen = true;
-    }
-
-    public boolean isOpen()
-    {
-        return mIsOpen;
-    }
 }

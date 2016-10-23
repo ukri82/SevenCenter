@@ -35,6 +35,9 @@ public class BaseView
     protected float mHeight = 96;
     protected String mImageURL;
 
+    int mAtlasWidth = 1024;
+    int mAtlasHeight = 1024;
+
     protected DisplayBundle mDispBundle;
 
     public BaseView()
@@ -42,11 +45,14 @@ public class BaseView
 
     }
 
-    public BaseView(String imageURL, DisplayBundle dispBundle)
+    public BaseView(String imageURL, int atlasWidth, int atlasHeight, DisplayBundle dispBundle)
     {
         mDispBundle = dispBundle;
 
         mImageURL = imageURL;
+
+        mAtlasWidth = atlasWidth;
+        mAtlasHeight = atlasHeight;
 
         loadGraphics();
     }
@@ -107,13 +113,16 @@ public class BaseView
 
     protected void loadGraphics()
     {
+        if(mImageURL.equals(""))
+            return;
+
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-        mTextureAtlas = new BuildableBitmapTextureAtlas(mDispBundle.mTextureManager, 1024, 1024, TextureOptions.BILINEAR);
+        mTextureAtlas = new BuildableBitmapTextureAtlas(mDispBundle.mTextureManager, mAtlasWidth, mAtlasHeight, TextureOptions.BILINEAR);
         mRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mTextureAtlas, mDispBundle.mContext, mImageURL);
 
         try
         {
-            this.mTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+            this.mTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 0, 0));
             this.mTextureAtlas.load();
         }
         catch (final ITextureAtlasBuilder.TextureAtlasBuilderException e)

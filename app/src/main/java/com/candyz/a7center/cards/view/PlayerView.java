@@ -16,16 +16,11 @@ public class PlayerView  extends BaseView
     int mNameGap = 5;
     int mVMargin = 5;
 
-    float mHandPosX;
-    float mHandPosY;
-
     HandView mHandView;
-
-
 
     public PlayerView(Player player, DisplayBundle dispBundle)
     {
-        super(player.getImageURL(), dispBundle);
+        super(player.getImageURL(), 1024, 1024, dispBundle);
 
         mPlayer = player;
 
@@ -33,46 +28,53 @@ public class PlayerView  extends BaseView
 
         mNameText = new Text(getX(), getY(), mDispBundle.mGeneralTextFont, player.getName(), mDispBundle.mVBOM);
         dispBundle.mScene.attachChild(mNameText);
-
-        mHandPosY = getY() + mVMargin;
     }
 
 
     public float getHeight()
     {
-        return mSprite.getHeight() * 1.5f + mNameText.getHeight() + mNameGap + mVMargin;
+        return mSprite.getHeight() + mNameText.getHeight() + mNameGap + mVMargin;
     }
 
     public void setPosition(float x, float y)
     {
-        super.setPosition(x, y);
-        mNameText.setPosition(getX(), getY() - mNameText.getHeight() - mNameGap);
+        mNameText.setPosition(x, y);
+        mSprite.setPosition(x, y + mNameText.getHeight() + mNameGap);
     }
 
-    public float getMiddleY()
+    public void setHeight(float height)
     {
-        return mSprite.getY() + mSprite.getHeight() / 2;
+        float ratio = height / getHeight();
+        mSprite.setHeight(mSprite.getHeight() * ratio);
+        mNameText.setHeight(mNameText.getHeight() * ratio);
     }
 
-    public void setHandPosition(float xPos)
+    public float getY()
     {
-        mHandPosX = xPos;
-        mHandView.setPosition(mHandPosX, mHandPosY);
+        float y = super.getY();
+        if(mNameText != null)
+            y = mNameText.getY();
+        return y;
     }
 
-    public void assignHand(HandView handView, boolean open)
+    public void setHandViewPosition(float xPos, float yPos)
+    {
+        mHandView.setPosition(xPos, yPos);
+    }
+
+    public void linkHandView(HandView handView)
     {
         mHandView = handView;
-        if(open)
-        {
-            mHandView.mHand.open();
-        }
-        mHandView.setHeight(getHeight());
-        mHandView.setWidth(300);
+    }
+
+    public void setHandViewDimensions(float width, float height)
+    {
+        mHandView.setHeight(height);
+        mHandView.setWidth(width);
 
     }
 
-    public HandView getHand()
+    public HandView getHandView()
     {
         return mHandView;
     }

@@ -1,6 +1,7 @@
 package com.candyz.a7center.cards.view;
 
 import com.candyz.a7center.cards.model.Card;
+import com.candyz.a7center.cards.model.Hand;
 import com.candyz.a7center.cards.model.Player;
 import com.candyz.a7center.cards.model.Tray;
 
@@ -16,7 +17,8 @@ public class TableView extends BaseView
 
     PlayerView mInteractivePlayerView;
 
-    float mInteractivePlayerAreaHeight = 0;
+    float mTrayViewWidth = 0;
+    float mTrayViewHeight = 0;
 
     ArrayList<Player> mPlayerList;
     ArrayList<HandView> mHandViews;
@@ -26,11 +28,12 @@ public class TableView extends BaseView
 
     public TableView(ArrayList<Player> playerList, ArrayList<HandView> handViews, Tray t, float width, float height, DisplayBundle dispBundle)
     {
-        super("background.png", dispBundle);
+        super("background.png", 1024, 1024, dispBundle);
 
         setWidth(width);
         setHeight(height);
-        mInteractivePlayerAreaHeight = height * 0.3f;
+        mTrayViewHeight = height * 0.5f;
+        mTrayViewWidth = width * 0.5f;
         mPlayerList = playerList;
         mHandViews = handViews;
         mTray = t;
@@ -43,25 +46,40 @@ public class TableView extends BaseView
 
     }
 
+    public void reset()
+    {
+        for(int i = 0; i < mHandViews.size(); i++)
+        {
+            mHandViews.get(i).reset();
+        }
+    }
+
+    public void initializeHandViews(int playerIndex, Hand hand, ArrayList<CardView> cardViews)
+    {
+        mHandViews.get(playerIndex).linkCardViews(hand, cardViews);
+    }
+
     private void positionInteractivePlayer()
     {
-        mInteractivePlayerView.getHand().setWidth(mTrayView.getWidth() - mInteractivePlayerView.getWidth());
-        mInteractivePlayerView.setPosition(mTrayView.getX(), getHeight() - mInteractivePlayerView.getHeight());
-        positionHandView(mInteractivePlayerView);
+        mInteractivePlayerView.setPosition(mTrayView.getX() + mTrayView.getWidth() / 2 - mInteractivePlayerView.getWidth() / 2, getHeight() - mInteractivePlayerView.getHeight());
+
+        float totalInteractivePlayerAreaHeight = getHeight() - mTrayViewHeight - mInteractivePlayerView.getHeight() - mInteractivePlayerView.getHandView().getIndicatorHeight() - 10f;
+        mInteractivePlayerView.setHandViewDimensions(getWidth(), totalInteractivePlayerAreaHeight);
+        mInteractivePlayerView.setHandViewPosition(0, getHeight() - totalInteractivePlayerAreaHeight - mInteractivePlayerView.getHeight() - 10f);
     }
 
     private void createViews()
     {
         int interactivePlayerIndex = getInteractivePlayerIndex();
         mInteractivePlayerView = new PlayerView(mPlayerList.get(interactivePlayerIndex), mDispBundle);
-        mInteractivePlayerView.assignHand(mHandViews.get(interactivePlayerIndex), true);
+        mInteractivePlayerView.linkHandView(mHandViews.get(interactivePlayerIndex));
 
         for (int i = interactivePlayerIndex + 1; i < interactivePlayerIndex + mPlayerList.size(); i++)
         {
             int index = i % mPlayerList.size();
             Player p = mPlayerList.get(index);
             PlayerView v = new PlayerView(p, mDispBundle);
-            v.assignHand(mHandViews.get(index), false);
+            v.linkHandView(mHandViews.get(index));
             mPlayerViewList.add(v);
         }
 
@@ -70,18 +88,27 @@ public class TableView extends BaseView
 
     private void positionPlayerViews()
     {
+        if(mPlayerViewList.size() == 0)
+            return;
+
+        float playerViewHeight = mTrayViewHeight / ((mPlayerViewList.size() + 1) / 2);
+        float playerViewWidth = mPlayerViewList.get(0).getWidth() * playerViewHeight / mPlayerViewList.get(0).getHeight();
+
         for(int i = 0; i < mPlayerViewList.size(); i++)
         {
+            mPlayerViewList.get(i).setHeight(playerViewHeight);
+            mPlayerViewList.get(i).setWidth(playerViewWidth);
+
             float posX = 0.0f;
             int heightOrder = mPlayerViewList.size() - i;
             if(i < mPlayerViewList.size() / 2)
             {
                 posX = getWidth() - mPlayerViewList.get(i).getWidth();//  place on right
-                mPlayerViewList.get(i).getHand().setOnRight();
+                mPlayerViewList.get(i).getHandView().setOnRight();
                 heightOrder = i + 1;
             }
 
-            float posY = getHeight() - mInteractivePlayerAreaHeight - heightOrder * mPlayerViewList.get(i).getHeight();
+            float posY = mTrayViewHeight - heightOrder * mPlayerViewList.get(i).getHeight() + 10;
             mPlayerViewList.get(i).setPosition(posX, posY);
         }
     }
@@ -89,14 +116,17 @@ public class TableView extends BaseView
     private void positionHandView(PlayerView playerView)
     {
         int margin = 5;
+        float handViewWidth = (getWidth() - mTrayViewWidth) / 2 - playerView.getWidth();
+        float handViewHeight = playerView.getHeight();
+        playerView.setHandViewDimensions(handViewWidth, handViewHeight);
 
         float posX = playerView.getX() + playerView.getWidth() + margin;
-        if(playerView.getHand().isOnRight())
+        if(playerView.getHandView().isOnRight())
         {
-            posX = playerView.getX() - playerView.getHand().getWidth() - margin;
+            posX = playerView.getX() - playerView.getHandView().getWidth() - margin;
         }
 
-        playerView.getHand().setPosition(posX, playerView.getMiddleY() - playerView.getHeight() / 2);
+        playerView.setHandViewPosition(posX, playerView.getY());
 
     }
 
@@ -109,8 +139,8 @@ public class TableView extends BaseView
 
         for(int i = 0; i < mPlayerViewList.size(); i++)
         {
-            HandView handView = mPlayerViewList.get(i).getHand();
-            if(mPlayerViewList.get(i).getHand().isOnRight())
+            HandView handView = mPlayerViewList.get(i).getHandView();
+            if(mPlayerViewList.get(i).getHandView().isOnRight())
             {
                 if(handView.getX() > maxX)
                 {
@@ -164,12 +194,13 @@ public class TableView extends BaseView
         return interactivePlayerIndex;
     }
 
-    public void startPlay(final int playerIndex)
+    public void beforePlay(final int playerIndex)
     {
         mHandViews.get(playerIndex).showGreen();
     }
 
-    public void playNextCard(final int playerIndex, final Card c)
+
+    public void play(final int playerIndex, final Card c)
     {
         if(c != null)
         {

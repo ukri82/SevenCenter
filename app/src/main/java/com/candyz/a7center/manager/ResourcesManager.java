@@ -88,7 +88,7 @@ public class ResourcesManager
 
     public void loadGameResources()
     {
-        loadGameGraphics();
+        //loadGameGraphics();
         loadGameFonts();
         loadGameAudio();
     }
@@ -122,7 +122,7 @@ public class ResourcesManager
         FontFactory.setAssetBasePath("font/");
         final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-        font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
+        font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.WHITE);
         font.load();
     }
 
@@ -130,7 +130,7 @@ public class ResourcesManager
     {
         final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-        mGeneralTextFont = FontFactory.createStroke(engine.getFontManager(), mainFontTexture, Typeface.create("sans-serif", Typeface.BOLD), 24f, true, Color.WHITE, 2f, Color.BLACK);
+        mGeneralTextFont = FontFactory.createStroke(engine.getFontManager(), mainFontTexture, Typeface.create("sans-serif", Typeface.BOLD), 24f, true, Color.WHITE, 2f, Color.WHITE);
         mGeneralTextFont.load();
     }
 

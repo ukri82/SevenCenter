@@ -10,6 +10,8 @@ import com.candyz.a7center.cards.model.Player;
 import com.candyz.a7center.cards.model.Tray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by u on 02.10.2016.
@@ -26,6 +28,8 @@ public class SevenCenter implements IPlayListener
 
     IPlayListener mPlayListener;
 
+    ArrayList<Integer> mScoreCard;
+
     public SevenCenter(IPlayerFactory playerFactory, IDeckFactory deckFactory)
     {
         mPlayerFactory = playerFactory;
@@ -37,14 +41,13 @@ public class SevenCenter implements IPlayListener
         mPlayerList = mPlayerFactory.create(interactivePlayerId, numPlayers);
         mDeck = mDeckFactory.create();
         mTray = new SevenCenterTray();
-
-        ArrayList<Hand> hands = createHands(numPlayers);
+        mScoreCard = new ArrayList<>();
 
         for(int i = 0; i < mPlayerList.size(); i++)
         {
-            mPlayerList.get(i).assign(hands.get(i));
             mPlayerList.get(i).linkTray(mTray);
             mPlayerList.get(i).registerPlayListener(this);
+            mScoreCard.add(0);
         }
     }
 
@@ -56,6 +59,18 @@ public class SevenCenter implements IPlayListener
     Object mSyncToken =  new Object();
     void startNewRound()
     {
+        mTray.reset();
+        mDeck.shuffle();
+        ArrayList<Hand> hands = createHands(mPlayerList.size());
+
+        for(int i = 0; i < mPlayerList.size(); i++)
+        {
+            mPlayerList.get(i).assign(hands.get(i));
+        }
+    }
+
+    void triggerGame()
+    {
         PlayThread playThread = new PlayThread();
         playThread.start();
     }
@@ -63,6 +78,18 @@ public class SevenCenter implements IPlayListener
     public Tray getTray()
     {
         return mTray;
+    }
+    public Deck getDeck()
+    {
+        return mDeck;
+    }
+
+    private void updatePenalty()
+    {
+        for(int i = 0; i < mPlayerList.size(); i++)
+        {
+            mScoreCard.set(i, mScoreCard.get(i) + mPlayerList.get(i).getBrain().getPenalty());
+        }
     }
 
     private ArrayList<Hand> createHands(int numPlayers)
@@ -86,6 +113,10 @@ public class SevenCenter implements IPlayListener
     public ArrayList<Player> getPlayerList()
     {
         return mPlayerList;
+    }
+    public ArrayList<Integer> getScoreCard()
+    {
+        return mScoreCard;
     }
 
     @Override
@@ -142,6 +173,7 @@ public class SevenCenter implements IPlayListener
                     {
                         if(mRoundListener != null)
                         {
+                            updatePenalty();
                             mRoundListener.finished(i);
                             finished = true;
                             break;

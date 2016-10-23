@@ -48,6 +48,7 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
         if(mPlayedCardView != null)
         {
             c = mPlayedCardView.getCard();
+            mPlayedCardView = null;
         }
         return c;
     }
@@ -80,6 +81,7 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
 
     void cardPlayFinished()
     {
+
         mHandView.prepareInteraction(false, null, null);
         synchronized (mSyncToken)
         {

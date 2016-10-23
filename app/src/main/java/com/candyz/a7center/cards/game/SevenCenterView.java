@@ -6,11 +6,15 @@ import com.candyz.a7center.cards.model.IPlayListener;
 import com.candyz.a7center.cards.view.BaseView;
 import com.candyz.a7center.cards.view.CardView;
 import com.candyz.a7center.cards.view.ChatView;
+import com.candyz.a7center.cards.view.DeckView;
 import com.candyz.a7center.cards.view.DisplayBundle;
 import com.candyz.a7center.cards.view.HandView;
+import com.candyz.a7center.cards.view.ScoreCardView;
 import com.candyz.a7center.cards.view.TableView;
 
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
 
 import java.util.ArrayList;
 
@@ -25,15 +29,17 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     TableView mTableView;
 
     final float mTableViewWidthPercent = 0.8f;
-    final float mTableViewHeightPercent = 0.8f;
+    final float mTableViewHeightPercent = 0.95f;
 
     ChatView mChatView;
+    ScoreCardView mScoreCardView;
 
+    DeckView mDeckView;
 
 
     public SevenCenterView(SevenCenter sevenCenter, DisplayBundle dispBundle)
     {
-        super("background.png", dispBundle);
+        super("background.png", 1024, 1024, dispBundle);
 
         mSevenCenter = sevenCenter;
         mSevenCenter.registerRoundListener(this);
@@ -43,8 +49,33 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
 
         mSevenCenter.registerPlayListener(this);
         loadPlayButtonGraphics();
+        createChatView();
+        createScoreCardView();
 
-        mChatView = new ChatView(dispBundle);
+        mDeckView = new DeckView(mSevenCenter.getDeck(), mDispBundle);
+
+    }
+
+    private void reset()
+    {
+        mTableView.reset();
+        mDeckView.reset();
+    }
+
+
+    private void createScoreCardView()
+    {
+        mScoreCardView = new ScoreCardView(mDispBundle);
+        mScoreCardView.setPosition(mTableView.getX() + mTableView.getWidth(), mPlayButton.getY() + mPlayButton.getHeight() + 5);
+        mScoreCardView.setWidth(mDispBundle.mCamera.getWidth() - mTableView.getWidth());
+        mScoreCardView.setHeight(mDispBundle.mCamera.getHeight() - mScoreCardView.getY());
+        mScoreCardView.setPlayers(mSevenCenter.getPlayerList());
+        mScoreCardView.show();
+    }
+
+    private void createChatView()
+    {
+        mChatView = new ChatView(mDispBundle);
         mChatView.setPosition(0, mTableView.getHeight());
         mChatView.setHeight(mDispBundle.mCamera.getHeight() - mTableView.getHeight());
         mChatView.setWidth(mTableView.getWidth());
@@ -54,9 +85,9 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     BaseView mPlayButton;
     private void loadPlayButtonGraphics()
     {
-        mPlayButton = new BaseView("play_button.png", mDispBundle);
+        mPlayButton = new BaseView("play_button.png", 1024, 1024, mDispBundle);
         mPlayButton.setPosition(mTableView.getX() + mTableView.getWidth(), 10);
-        mPlayButton.setHeight(60);
+        mPlayButton.setHeight(100);
         mPlayButton.setWidth(mDispBundle.mCamera.getWidth() * (1 - mTableViewWidthPercent));
         mPlayButton.show();
 
@@ -66,7 +97,10 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
             @Override
             public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY)
             {
+                reset();
                 mSevenCenter.startNewRound();
+                initializeHandViews();
+                mSevenCenter.triggerGame();
             }
         });
     }
@@ -76,32 +110,43 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
         ArrayList<HandView> handViews = new ArrayList<>();
         for(int i = 0; i < mSevenCenter.getPlayerList().size(); i++)
         {
-            Hand hand = mSevenCenter.getPlayerList().get(i).getHand();
-            ArrayList<CardView> cardViews = new ArrayList<>();
-            for(int j = 0; j < hand.get().size(); j++)
-            {
-                cardViews.add(new CardView(hand.get().get(j), mDispBundle));
-            }
-            HandView handView = new HandView(hand, cardViews, mDispBundle);
+            HandView handView = new HandView(mDispBundle);
             handViews.add(handView);
 
             if(mSevenCenter.getPlayerList().get(i).isInteractive())
             {
                 ((InteractiveBrain)mSevenCenter.getPlayerList().get(i).getBrain()).linkHandView(handView);
+                handView.setOpen(true);
             }
         }
         return handViews;
     }
 
+    private void initializeHandViews()
+    {
+        for(int i = 0; i < mSevenCenter.getPlayerList().size(); i++)
+        {
+            Hand hand = mSevenCenter.getPlayerList().get(i).getHand();
+            ArrayList<CardView> cardViews = new ArrayList<>();
+            for(int j = 0; j < hand.get().size(); j++)
+            {
+                //cardViews.add(new CardView(hand.get().get(j), mDispBundle));
+                cardViews.add(mDeckView.get(hand.get().get(j)));
+            }
+
+            mTableView.initializeHandViews(i, hand, cardViews);
+        }
+    }
+
     @Override
     public void beforePlay(final int playerIndex)
     {
-        mDispBundle.mActivity.runOnUiThread(new Runnable()
+        mDispBundle.mActivity.runOnUpdateThread(new Runnable()
         {
             @Override
             public void run()
             {
-                mTableView.startPlay(playerIndex);
+                mTableView.beforePlay(playerIndex);
             }
         });
     }
@@ -109,12 +154,12 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     @Override
     public void play(final int playerIndex, final Card c)
     {
-        mDispBundle.mActivity.runOnUiThread(new Runnable()
+        mDispBundle.mActivity.runOnUpdateThread(new Runnable()
         {
             @Override
             public void run()
             {
-                mTableView.playNextCard(playerIndex, c);
+                mTableView.play(playerIndex, c);
                 mSevenCenter.playCardFinished();
             }
         });
@@ -124,6 +169,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     @Override
     public void finished(int playerIndex)
     {
-
+        mChatView.addStatus("Round finished");
+        mScoreCardView.updateScore(mSevenCenter.getScoreCard());
     }
 }
