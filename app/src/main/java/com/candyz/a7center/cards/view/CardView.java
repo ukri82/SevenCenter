@@ -2,6 +2,12 @@ package com.candyz.a7center.cards.view;
 
 import com.candyz.a7center.cards.model.Card;
 
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.IEntityModifier;
+import org.andengine.entity.modifier.MoveModifier;
+import org.andengine.entity.modifier.MoveYModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
+import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.primitive.Line;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.ButtonSprite;
@@ -15,6 +21,10 @@ import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtla
 import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.debug.Debug;
+import org.andengine.util.modifier.IModifier;
+import org.andengine.util.modifier.ease.EaseBounceOut;
+import org.andengine.util.modifier.ease.EaseCubicIn;
+import org.andengine.util.modifier.ease.EaseElasticIn;
 
 import java.util.ArrayList;
 
@@ -214,5 +224,15 @@ public class CardView extends BaseView
             mDispBundle.mScene.unregisterTouchArea(mCardFgSprite);
             mCardFgSprite.setOnClickListener(null);
         }
+    }
+
+    public void animateMove(float toX, float toY)
+    {
+        mCardFgSprite.registerEntityModifier(
+                new ParallelEntityModifier(
+                        new MoveModifier(1, getX(), toX, getY(), toY, EaseCubicIn.getInstance()),
+                        new RotationModifier(1, 0, 360)
+                )
+                );
     }
 }

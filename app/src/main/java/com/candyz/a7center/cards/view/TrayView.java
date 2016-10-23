@@ -2,6 +2,8 @@ package com.candyz.a7center.cards.view;
 
 import com.candyz.a7center.cards.model.Tray;
 
+import org.andengine.util.modifier.ease.EaseBounceOut;
+
 /**
  * Created by u on 04.10.2016.
  */
@@ -34,8 +36,10 @@ public class TrayView extends BaseView
 
         if(!cardView.isOpen())
             cardView.open();
-        cardView.setPosition(posX, posY);
+        cardView.animateMove(posX, posY);
         cardView.getCard().played(true);
     }
+
+
 
 }
