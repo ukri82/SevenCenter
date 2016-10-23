@@ -3,6 +3,7 @@ package com.candyz.a7center.cards.game;
 import com.candyz.a7center.cards.model.Brain;
 import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.view.CardView;
+import com.candyz.a7center.cards.view.ChatView;
 import com.candyz.a7center.cards.view.HandView;
 import com.candyz.a7center.cards.view.ICardClickHandler;
 
@@ -23,6 +24,12 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
 
     }
 
+    ChatView mChatView;
+    public void linkChatView(ChatView chatView)
+    {
+        mChatView = chatView;
+    }
+
     CardView mPlayedCardView;
 
     private ArrayList<CardView> getPlayableCards()
@@ -41,9 +48,16 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
     @Override
     public Card getNextCard()
     {
-        mHandView.prepareInteraction(true, this, getPlayableCards());
+        ArrayList<CardView> playableCards = getPlayableCards();
+        if(playableCards.size() == 0)
+        {
+            mChatView.addStatus("Click green button to pass, if you want", false);
+        }
+
+        mHandView.prepareInteraction(true, this, playableCards);
 
         waitForNextPlay();
+
         Card c = null;
         if(mPlayedCardView != null)
         {
@@ -69,11 +83,16 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
             ArrayList<Card> possibleCards = getPlayeableCards();
             if(possibleCards.size() != 0)
             {
+                if(mChatView != null)
+                {
+                    mChatView.addStatus("Please play one of the highlighted cards.", true);
+                }
                 return;
             }
             else
             {
                 //  No card selected. User clicked pass
+                mChatView.addStatus("", false);
                 cardPlayFinished();
             }
         }

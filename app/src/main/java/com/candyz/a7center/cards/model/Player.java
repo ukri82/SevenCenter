@@ -13,6 +13,7 @@ public class Player
     String mName;
     String mId;
     boolean mIsFemale = true;
+    int mBrilliancy = 1;
 
     boolean mInteractive = false;
     IPlayListener mPlayListener;
@@ -21,12 +22,13 @@ public class Player
 
     Tray mTray;
 
-    public Player(String id, String name, boolean isFemale, String photoURL)
+    public Player(String id, String name, boolean isFemale, String photoURL, int brilliancy)
     {
         mPhotoURL = photoURL;
         mName = name;
         mId = id;
         mIsFemale = isFemale;
+        mBrilliancy = brilliancy;
     }
 
     public void linkTray(Tray t)
@@ -60,6 +62,11 @@ public class Player
     public boolean isFemale()
     {
         return mIsFemale;
+    }
+
+    public int getBrilliancy()
+    {
+        return mBrilliancy;
     }
 
     public String getImageURL()

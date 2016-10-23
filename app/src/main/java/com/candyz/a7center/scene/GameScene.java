@@ -121,7 +121,7 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener
 
         DisplayBundle dBundle = new DisplayBundle(activity, resourcesManager.activity.getTextureManager(), vbom,
                 this, resourcesManager.engine, resourcesManager.activity, resourcesManager.camera, resourcesManager.mGeneralTextFont);
-        SevenCenter sevenCenter = new SevenCenter(new PlayerFactory(), new DeckFactory());
+        SevenCenter sevenCenter = new SevenCenter(new PlayerFactory(resourcesManager.activity), new DeckFactory());
         sevenCenter.startGame("5", 6);
 		mSevenCenterView = new SevenCenterView(sevenCenter, dBundle);
     }

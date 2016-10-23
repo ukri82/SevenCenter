@@ -43,13 +43,15 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
 
         mSevenCenter = sevenCenter;
         mSevenCenter.registerRoundListener(this);
+
+        mChatView = new ChatView(mDispBundle);
         ArrayList<HandView> handViews = createHandViews();
         mTableView = new TableView(sevenCenter.getPlayerList(), handViews, sevenCenter.getTray(),
                 mDispBundle.mCamera.getWidth() * mTableViewWidthPercent, mDispBundle.mCamera.getHeight() * mTableViewHeightPercent, dispBundle);
 
         mSevenCenter.registerPlayListener(this);
         loadPlayButtonGraphics();
-        createChatView();
+        positionChatView();
         createScoreCardView();
 
         mDeckView = new DeckView(mSevenCenter.getDeck(), mDispBundle);
@@ -73,9 +75,8 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
         mScoreCardView.show();
     }
 
-    private void createChatView()
+    private void positionChatView()
     {
-        mChatView = new ChatView(mDispBundle);
         mChatView.setPosition(0, mTableView.getHeight());
         mChatView.setHeight(mDispBundle.mCamera.getHeight() - mTableView.getHeight());
         mChatView.setWidth(mTableView.getWidth());
@@ -116,6 +117,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
             if(mSevenCenter.getPlayerList().get(i).isInteractive())
             {
                 ((InteractiveBrain)mSevenCenter.getPlayerList().get(i).getBrain()).linkHandView(handView);
+                ((InteractiveBrain)mSevenCenter.getPlayerList().get(i).getBrain()).linkChatView(mChatView);
                 handView.setOpen(true);
             }
         }
@@ -169,7 +171,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     @Override
     public void finished(int playerIndex)
     {
-        mChatView.addStatus("Round finished");
+        mChatView.addStatus("Round finished", true);
         mScoreCardView.updateScore(mSevenCenter.getScoreCard());
     }
 }
