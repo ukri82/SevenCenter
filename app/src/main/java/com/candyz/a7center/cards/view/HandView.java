@@ -192,6 +192,11 @@ public class HandView extends BaseView
         placeIndicators();
     }
 
+    public void highlightThru()
+    {
+
+    }
+
     public void showRed()
     {
         showIndicator(mIndicatorR);

@@ -40,6 +40,7 @@ public class Player
     public void attachBrain(Brain brain)
     {
         mBrain = brain;
+        mBrain.setBrilliancy(mBrilliancy);
     }
     public Brain getBrain()
     {

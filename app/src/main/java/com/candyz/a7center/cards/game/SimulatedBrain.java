@@ -4,6 +4,7 @@ import com.candyz.a7center.cards.model.Brain;
 import com.candyz.a7center.cards.model.Card;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by u on 07.10.2016.
@@ -11,6 +12,122 @@ import java.util.ArrayList;
 
 public class SimulatedBrain extends Brain
 {
+    class CardScore
+    {
+        Card mCard;
+        int mScore = 0;
+        public CardScore(Card c, int score)
+        {
+            mCard = c;
+            mScore = score;
+        }
+
+        public Card getCard()
+        {
+            return mCard;
+        }
+
+        public int getScore()
+        {
+            return mScore;
+        }
+    }
+
+    ArrayList<Card> getCardsOfSuit(ArrayList<Card> possibleCards, Card c)
+    {
+        ArrayList<Card> cards = new ArrayList<>();
+
+        for(int i = 0; i < possibleCards.size(); i++)
+        {
+            if(possibleCards.get(i).getSuit() == c.getSuit())
+            {
+                cards.add(possibleCards.get(i));
+            }
+
+        }
+
+        return cards;
+    }
+
+    int computeScore(ArrayList<Card> cardsOfSameSuit, Card c)
+    {
+        int score = 0;
+        if(c.getNumber() == 14 || c.getNumber() == 2)
+        {
+            score = 25;
+            return score;
+        }
+        if(cardsOfSameSuit.size() > 0)
+        {
+            for(int i = 0; i < cardsOfSameSuit.size(); i++)
+            {
+                int cardNumDiff = cardsOfSameSuit.get(i).getNumber() - c.getNumber();
+                if(cardNumDiff == 1 || cardNumDiff == -1)
+                {
+                    score = 25;
+                    return score;
+                }
+            }
+
+            if(c.getNumber() >= 7)
+            {
+                if(cardsOfSameSuit.get(cardsOfSameSuit.size() - 1).getNumber() >= 7)
+                    score = 3 * (cardsOfSameSuit.get(cardsOfSameSuit.size() - 1).getNumber() - c.getNumber());
+            }
+            else
+            {
+                if(cardsOfSameSuit.get(0).getNumber() < 7)
+                    score = c.getNumber() - cardsOfSameSuit.get(0).getNumber();
+            }
+        }
+
+        return score;
+
+    }
+
+    ArrayList<CardScore> getCardScores()
+    {
+        ArrayList<CardScore> cardScores = new ArrayList<>();
+        ArrayList<Card> possibleCards = getPlayeableCards();
+        for(int i = 0; i < possibleCards.size(); i++)
+        {
+            ArrayList<Card> cardsOfSameSuit = getCardsOfSuit(possibleCards, possibleCards.get(i));
+            Collections.sort(cardsOfSameSuit, new Brain.CardComparator());
+            int score = computeScore(cardsOfSameSuit, possibleCards.get(i));
+            cardScores.add(new CardScore(possibleCards.get(i), score));
+        }
+        return cardScores;
+    }
+
+    Card getBrilliantCard()
+    {
+        int maxScore = -1;
+        Card maxCard = null;
+        ArrayList<CardScore> cardScores = getCardScores();
+        for(int i = 0; i < cardScores.size(); i++)
+        {
+            if(cardScores.get(i).getScore() > maxScore)
+            {
+                maxScore = cardScores.get(i).getScore();
+                maxCard = cardScores.get(i).getCard();
+            }
+        }
+
+        return maxCard;
+
+    }
+
+    Card getDumbCard()
+    {
+        ArrayList<Card> possibleCards = getPlayeableCards();
+
+        Card nextCard = null;
+        if(possibleCards.size() != 0)
+            nextCard = possibleCards.get(0);
+
+        return nextCard;
+    }
+
     @Override
     public Card getNextCard()
     {
@@ -22,11 +139,16 @@ public class SimulatedBrain extends Brain
             e.printStackTrace();
         }
 
-        ArrayList<Card> possibleCards = getPlayeableCards();
-
         Card nextCard = null;
-        if(possibleCards.size() != 0)
-            nextCard = possibleCards.get(0);
+        if(mBrilliancy == 2)
+        {
+            nextCard = getBrilliantCard();
+        }
+        else
+        {
+            nextCard = getDumbCard();
+        }
+
         return nextCard;
     }
 

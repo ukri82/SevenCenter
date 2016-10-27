@@ -13,6 +13,7 @@ abstract public class Brain
     protected ArrayList<ArrayList<Card>> mSortedHand;
     protected Tray mTray;
     protected Hand mHand;
+    protected int mBrilliancy = 1;
 
     public Hand getHand()
     {
@@ -37,6 +38,11 @@ abstract public class Brain
             Collections.sort(mSortedHand.get(i), new Brain.CardComparator());
             mHand.get().addAll(mSortedHand.get(i));
         }
+    }
+
+    public void setBrilliancy(int brilliancy)
+    {
+        mBrilliancy = brilliancy;
     }
 
     public class CardComparator implements Comparator<Card>
