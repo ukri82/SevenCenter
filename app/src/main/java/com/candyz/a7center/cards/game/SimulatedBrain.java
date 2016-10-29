@@ -5,6 +5,7 @@ import com.candyz.a7center.cards.model.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 /**
  * Created by u on 07.10.2016.
@@ -123,9 +124,33 @@ public class SimulatedBrain extends Brain
 
         Card nextCard = null;
         if(possibleCards.size() != 0)
-            nextCard = possibleCards.get(0);
+        {
+            Random ran = new Random();
+            int nextIndex = ran.nextInt(possibleCards.size());
+            nextCard = possibleCards.get(nextIndex);
+        }
 
         return nextCard;
+    }
+
+    Card getSafeCard()
+    {
+        Card nextCard = null;
+        ArrayList<Card> possibleCards = getPlayeableCards();
+
+        int maxNumber = 0;
+
+        for(int i = 0; i < possibleCards.size(); i++)
+        {
+            if(possibleCards.get(i).getNumber() > maxNumber)
+            {
+                maxNumber = possibleCards.get(i).getNumber();
+                nextCard = possibleCards.get(i);
+            }
+        }
+
+        return nextCard;
+
     }
 
     @Override
@@ -140,9 +165,13 @@ public class SimulatedBrain extends Brain
         }
 
         Card nextCard = null;
-        if(mBrilliancy == 2)
+        if(mBrilliancy == 3)
         {
             nextCard = getBrilliantCard();
+        }
+        else if(mBrilliancy == 2)
+        {
+            nextCard = getSafeCard();
         }
         else
         {

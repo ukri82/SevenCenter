@@ -206,6 +206,15 @@ public class TableView extends BaseView
         {
             CardView cView = mHandViews.get(playerIndex).getCardView(c);
             mTrayView.add(cView);
+            for(int i = 0; i < mPlayerViewList.size(); i++)
+            {
+                if(mPlayerViewList.get(i).getHandView() == mHandViews.get(playerIndex))
+                {
+                    mPlayerViewList.get(i).highlightThru();
+                    break;
+                }
+            }
+
             mHandViews.get(playerIndex).showYellow();
         }
         else

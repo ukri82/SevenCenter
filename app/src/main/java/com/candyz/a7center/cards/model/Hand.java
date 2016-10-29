@@ -25,4 +25,17 @@ public class Hand
         return mCards;
     }
 
+    public ArrayList<Card> getUnplayedCards()
+    {
+        ArrayList<Card> unplayedCards = new ArrayList<>();
+        for(int i = 0; i < mCards.size(); i++)
+        {
+            if(!mCards.get(i).isPlayed())
+            {
+                unplayedCards.add(mCards.get(i));
+            }
+        }
+        return unplayedCards;
+    }
+
 }

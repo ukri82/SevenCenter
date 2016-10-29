@@ -13,6 +13,7 @@ public class PlayerView  extends BaseView
 {
     Player mPlayer;
     Text mNameText;
+    BaseView mBrilliancyView;
     int mNameGap = 5;
     int mVMargin = 5;
 
@@ -28,18 +29,30 @@ public class PlayerView  extends BaseView
 
         mNameText = new Text(getX(), getY(), mDispBundle.mGeneralTextFont, player.getName(), mDispBundle.mVBOM);
         dispBundle.mScene.attachChild(mNameText);
+
+        createBrilliancyView();
     }
 
+    void createBrilliancyView()
+    {
+        mBrilliancyView = new BaseView("bulb" + mPlayer.getBrilliancy() + ".png", 1024, 1024, mDispBundle);
+        float height = super.getHeight() * 0.2f;
+        float ratio = height / mBrilliancyView.getHeight() * mPlayer.getBrilliancy();
+        mBrilliancyView.setWidth(mBrilliancyView.getWidth() * ratio);
+        mBrilliancyView.setHeight(height);
+        mBrilliancyView.show();
+    }
 
     public float getHeight()
     {
-        return mSprite.getHeight() + mNameText.getHeight() + mNameGap + mVMargin;
+        return mSprite.getHeight() + mNameText.getHeight() + mBrilliancyView.getHeight() + mNameGap + mVMargin;
     }
 
     public void setPosition(float x, float y)
     {
         mNameText.setPosition(x, y);
-        mSprite.setPosition(x, y + mNameText.getHeight() + mNameGap);
+        mBrilliancyView.setPosition(x, y + mNameText.getHeight());
+        mSprite.setPosition(x, mBrilliancyView.getY() + mBrilliancyView.getHeight() + mNameGap);
     }
 
     public void setHeight(float height)
@@ -47,6 +60,7 @@ public class PlayerView  extends BaseView
         float ratio = height / getHeight();
         mSprite.setHeight(mSprite.getHeight() * ratio);
         mNameText.setHeight(mNameText.getHeight() * ratio);
+        mBrilliancyView.setHeight(mBrilliancyView.getHeight() * ratio);
     }
 
     public float getY()
@@ -77,5 +91,13 @@ public class PlayerView  extends BaseView
     public HandView getHandView()
     {
         return mHandView;
+    }
+
+    public void highlightThru()
+    {
+        if(!mPlayer.isInteractive())
+        {
+            mHandView.highlightThru(mPlayer.getBrain().getPlayeableCards());
+        }
     }
 }

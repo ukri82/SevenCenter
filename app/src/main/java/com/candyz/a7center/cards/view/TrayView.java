@@ -34,6 +34,7 @@ public class TrayView extends BaseView
         float posX = getX() + getWidth() / 2 + (cardView.getCard().getSuit() - 3) * (cardView.getWidth() + cardHorizontalGap);
         float posY = getY() + getHeight() / 2 + cardVerticalGap / 2 + (cardView.getCard().getNumber() - 7 - 4) * cardVerticalGap;
 
+        cardView.removeHighlight();
         if(!cardView.isOpen())
             cardView.open();
         cardView.animateMove(posX, posY);

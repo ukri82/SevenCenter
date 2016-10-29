@@ -52,16 +52,18 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
         mSevenCenter.registerPlayListener(this);
         loadPlayButtonGraphics();
         positionChatView();
+        mDeckView = new DeckView(mSevenCenter.getDeck(), mDispBundle);
         createScoreCardView();
 
-        mDeckView = new DeckView(mSevenCenter.getDeck(), mDispBundle);
 
+        mDeckView.setPosition(mScoreCardView.getX(), mScoreCardView.getY() + mScoreCardView.getHeight());
     }
 
     private void reset()
     {
         mTableView.reset();
         mDeckView.reset();
+
     }
 
 
@@ -70,7 +72,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
         mScoreCardView = new ScoreCardView(mDispBundle);
         mScoreCardView.setPosition(mTableView.getX() + mTableView.getWidth(), mPlayButton.getY() + mPlayButton.getHeight() + 5);
         mScoreCardView.setWidth(mDispBundle.mCamera.getWidth() - mTableView.getWidth());
-        mScoreCardView.setHeight(mDispBundle.mCamera.getHeight() - mScoreCardView.getY());
+        mScoreCardView.setHeight(mDispBundle.mCamera.getHeight() - mScoreCardView.getY() - mDeckView.getHeight());
         mScoreCardView.setPlayers(mSevenCenter.getPlayerList());
         mScoreCardView.show();
     }
@@ -81,6 +83,22 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
         mChatView.setHeight(mDispBundle.mCamera.getHeight() - mTableView.getHeight());
         mChatView.setWidth(mTableView.getWidth());
         mChatView.show();
+    }
+
+    private void startNewRound()
+    {
+        reset();
+        /*try
+        {
+            Thread.sleep(2000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }*/
+        mSevenCenter.startNewRound();
+        initializeHandViews();
+        mSevenCenter.triggerGame();
     }
 
     BaseView mPlayButton;
@@ -98,10 +116,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
             @Override
             public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY)
             {
-                reset();
-                mSevenCenter.startNewRound();
-                initializeHandViews();
-                mSevenCenter.triggerGame();
+                startNewRound();
             }
         });
     }

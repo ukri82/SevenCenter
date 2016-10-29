@@ -59,7 +59,7 @@ abstract public class Brain
         mTray = tray;
     }
 
-    protected ArrayList<Card> getPlayeableCards()
+    public ArrayList<Card> getPlayeableCards()
     {
         ArrayList<Card> possibleCards = new ArrayList<>();
         for(int i = 0; i < mSortedHand.size(); i++)

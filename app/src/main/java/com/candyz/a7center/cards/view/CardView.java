@@ -1,7 +1,10 @@
 package com.candyz.a7center.cards.view;
 
+import android.util.Log;
+
 import com.candyz.a7center.cards.model.Card;
 
+import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveModifier;
@@ -100,7 +103,7 @@ public class CardView extends BaseView
 
             for (int i = 0; i < mBorderLines.size(); i++)
             {
-                mBorderLines.get(i).setLineWidth(4f);
+                mBorderLines.get(i).setLineWidth(6f);
             }
         }
     }
@@ -129,8 +132,11 @@ public class CardView extends BaseView
 
         for (int i = 0; i < mBorderLines.size(); i++)
         {
-            mBorderLines.get(i).setColor(0.0f, 0.0f, 1.0f);
-            mDispBundle.mScene.attachChild(mBorderLines.get(i));
+            if(!mBorderLines.get(i).hasParent())
+            {
+                mBorderLines.get(i).setColor(0.0f, 0.0f, 1.0f);
+                mDispBundle.mScene.attachChild(mBorderLines.get(i));
+            }
         }
     }
 
@@ -226,13 +232,31 @@ public class CardView extends BaseView
         }
     }
 
-    public void animateMove(float toX, float toY)
+    public void animateMove(final float toX, final float toY)
     {
-        mCardFgSprite.registerEntityModifier(
+        Entity e = mSprite;
+        if(isOpen())
+        {
+            e = mCardFgSprite;
+        }
+        e.registerEntityModifier(
                 new ParallelEntityModifier(
-                        new MoveModifier(1, getX(), toX, getY(), toY, EaseCubicIn.getInstance()),
+                        new MoveModifier(1, getX(), toX, getY(), toY, new IEntityModifier.IEntityModifierListener() {
+
+                            @Override
+                            public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem)
+                            {
+
+                            }
+
+                            @Override
+                            public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem)
+                            {
+                                setPosition(toX, toY);
+                            }
+                        }, EaseCubicIn.getInstance()),
                         new RotationModifier(1, 0, 360)
                 )
-                );
+        );
     }
 }

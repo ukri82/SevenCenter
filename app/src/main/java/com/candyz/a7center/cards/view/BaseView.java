@@ -1,6 +1,7 @@
 package com.candyz.a7center.cards.view;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.candyz.a7center.base.BaseScene;
 import com.candyz.a7center.cards.model.Card;
@@ -99,6 +100,7 @@ public class BaseView
 
     public void setPosition(float x, float y)
     {
+        //Log.d("", "CardView.setPosition (" + x + ", " + y + ")");
         mSprite.setPosition(x, y);
     }
     public float getX()

@@ -17,6 +17,8 @@ public class DeckView extends BaseView
 
     float mOrigCardWidth;
     float mOrigCardHeight;
+    float mX = 0;
+    float mY = 0;
 
     public DeckView(Deck deck, DisplayBundle displayBundle)
     {
@@ -39,7 +41,7 @@ public class DeckView extends BaseView
     {
         for(int i = 0; i < mCardViews.size(); i++)
         {
-            if(c.getSuit() == mCardViews.get(i).getCard().getSuit() && c.getNumber() == mCardViews.get(i).getCard().getNumber())
+            if(c.isEqual(mCardViews.get(i).getCard()))
             {
                 return mCardViews.get(i);
             }
@@ -48,11 +50,40 @@ public class DeckView extends BaseView
 
     }
 
+    public void setPosition(float x, float y)
+    {
+        mX = x;
+        mY = y;
+        placeCards(false);
+    }
+
+    private void placeCards(boolean animate)
+    {
+        for(int i = 0; i < mCardViews.size(); i++)
+        {
+            if(animate)
+            {
+                mCardViews.get(i).animateMove(mX, mY);
+            }
+            else
+            {
+                mCardViews.get(i).setPosition(mX, mY);
+            }
+        }
+    }
+
     public void reset()
     {
         for(int i = 0; i < mCardViews.size(); i++)
         {
             mCardViews.get(i).reset();
+            mCardViews.get(i).close();
         }
+        placeCards(false);
+    }
+
+    public float getHeight()
+    {
+        return mOrigCardHeight;
     }
 }

@@ -107,7 +107,7 @@ public class HandView extends BaseView
                 mCardDisplayGap = (getWidth() - mXMargin * 2 - mIndicatorY.getWidth() - mCardViews.get(0).getWidth()) / mCardViews.size();
             }
 
-            cardSizeRatio = getHeight() / 2 / mCardViews.get(0).getHeight();
+            cardSizeRatio = getHeight() * 0.75f / mCardViews.get(0).getHeight();
         }
 
         for(int i = 0; i < mCardViews.size(); i++)
@@ -120,7 +120,8 @@ public class HandView extends BaseView
                 xPos = getX() + getWidth() - mXMargin - mCardViews.get(0).getWidth() - mCardDisplayGap * (mCardViews.size() - 1 - i);
             }
             float yPos = getY() + getHeight() / 2 - mCardViews.get(i).getHeight() / 2;
-            mCardViews.get(i).setPosition(xPos, yPos);
+            //mCardViews.get(i).setPosition(xPos, yPos);
+            mCardViews.get(i).animateMove(xPos, yPos);
         }
     }
 
@@ -192,9 +193,23 @@ public class HandView extends BaseView
         placeIndicators();
     }
 
-    public void highlightThru()
+    public void highlightThru(ArrayList<Card> playableCards)
     {
-
+        ArrayList<Card> unplayedCards = mHand.getUnplayedCards();
+        if(unplayedCards.size() <= 3)
+        {
+            for (int i = 0; i < playableCards.size(); i++)
+            {
+                for(int j = 0; j < mCardViews.size(); j++)
+                {
+                    if (mCardViews.get(j).getCard().isEqual(playableCards.get(i)))
+                    {
+                        mCardViews.get(j).highlight();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void showRed()
@@ -236,7 +251,7 @@ public class HandView extends BaseView
     {
         for(int i = 0; i < mCardViews.size(); i++)
         {
-            if(mCardViews.get(i).getCard().getSuit() == c.getSuit() && mCardViews.get(i).getCard().getNumber() == c.getNumber())
+            if(mCardViews.get(i).getCard().isEqual(c))
             {
                 return mCardViews.get(i);
             }

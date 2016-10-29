@@ -50,4 +50,9 @@ public class Card
     {
         return mIsPlayed;
     }
+
+    public boolean isEqual(Card c)
+    {
+        return this.getSuit() == c.getSuit() && this.getNumber() == c.getNumber();
+    }
 }
