@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">7Center</string>
+    <string name="app_name">Seven Center</string>
+    <string name="name_input_hint">Input Name</string>
+    <string name="input_name">Your name</string>
+    <string name="input_number">Your number</string>
+    <string name="basic_details_accept">Done</string>
 </resources>

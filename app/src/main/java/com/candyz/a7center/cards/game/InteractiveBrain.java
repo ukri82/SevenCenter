@@ -1,5 +1,8 @@
 package com.candyz.a7center.cards.game;
 
+import android.content.Context;
+import android.os.Vibrator;
+
 import com.candyz.a7center.cards.model.Brain;
 import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.view.CardView;
@@ -63,6 +66,8 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
         {
             c = mPlayedCardView.getCard();
             mPlayedCardView = null;
+            Vibrator v = (Vibrator) mHandView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(30);
         }
         return c;
     }

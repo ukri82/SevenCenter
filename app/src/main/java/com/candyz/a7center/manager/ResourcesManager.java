@@ -48,6 +48,7 @@ public class ResourcesManager
 
     public Font font;
     public Font mGeneralTextFont;
+    public boolean mHasVibratePermission = false;
 
     //---------------------------------------------
     // TEXTURES & TEXTURE REGIONS

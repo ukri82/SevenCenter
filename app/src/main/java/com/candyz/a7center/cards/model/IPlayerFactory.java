@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 public interface IPlayerFactory
 {
-    public ArrayList<Player> create(String interactivePlayerId, int numPlayers);
+    public ArrayList<Player> create(int numPlayers);
 }

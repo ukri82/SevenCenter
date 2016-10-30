@@ -24,16 +24,18 @@ public class HandView extends BaseView
     BaseView mIndicatorG;
     BaseView mIndicatorR;
     BaseView mCurrentIndicator;
+    BaseView mPassButton;
 
     public HandView(DisplayBundle dBundle)
     {
-        super("Hand.png", 1024, 1024, dBundle);
+        super("Hand.png", 512, 512, dBundle);
 
         show();
 
-        mIndicatorY = new BaseView("yellowlight.png", 1024, 1024, dBundle);
-        mIndicatorG = new BaseView("greenlight.png", 1024, 1024, dBundle);
-        mIndicatorR = new BaseView("redlight.png", 1024, 1024, dBundle);
+        mIndicatorY = new BaseView("yellowlight.png", 64, 64, dBundle);
+        mIndicatorG = new BaseView("greenlight.png", 64, 64, dBundle);
+        mIndicatorR = new BaseView("redlight.png", 64, 64, dBundle);
+        mPassButton = new BaseView("pass_button.png", 256, 256, dBundle);
         showIndicator(mIndicatorY);
     }
 
@@ -163,6 +165,7 @@ public class HandView extends BaseView
         placeIndicator(mIndicatorY);
         placeIndicator(mIndicatorG);
         placeIndicator(mIndicatorR);
+        placeIndicator(mPassButton);
     }
 
     public void prepareInteraction(boolean flag, ICardClickHandler cardClickHandler, ArrayList<CardView> playableCards)
@@ -223,7 +226,14 @@ public class HandView extends BaseView
     }
     public void showGreen()
     {
-        showIndicator(mIndicatorG);
+        if(mIsOpen)
+        {
+            showIndicator(mPassButton);
+        }
+        else
+        {
+            showIndicator(mIndicatorG);
+        }
     }
 
     private void setIndicatorClickable(boolean flag, final ICardClickHandler cardClickHandler)

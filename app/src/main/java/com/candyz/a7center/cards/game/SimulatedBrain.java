@@ -153,13 +153,16 @@ public class SimulatedBrain extends Brain
 
     }
 
+    Random mRandom = new Random();
+
     @Override
     public Card getNextCard()
     {
         try
         {
-            Thread.sleep(1000);
-        } catch (InterruptedException e)
+            Thread.sleep(1000 + mRandom.nextInt(500 + (3 - mBrilliancy) * 1000));
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }

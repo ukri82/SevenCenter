@@ -29,7 +29,11 @@ public class DisplayBundle
     public Camera mCamera;
     public Font mGeneralTextFont;
 
-    public DisplayBundle(Context c, TextureManager tm, VertexBufferObjectManager vbom, BaseScene scene, Engine engine, GameActivity activity, Camera camera, Font font)
+    public boolean mHasVibratePermission = false;
+
+    public DisplayBundle(Context c, TextureManager tm, VertexBufferObjectManager vbom,
+                         BaseScene scene, Engine engine, GameActivity activity, Camera camera, Font font,
+                         boolean hasVibratePermission)
     {
         mContext = c;
         mVBOM = vbom;
@@ -39,5 +43,6 @@ public class DisplayBundle
         mActivity = activity;
         mCamera = camera;
         mGeneralTextFont = font;
+        mHasVibratePermission = hasVibratePermission;
     }
 }

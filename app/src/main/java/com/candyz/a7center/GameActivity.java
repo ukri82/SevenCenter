@@ -1,7 +1,15 @@
 package com.candyz.a7center;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 
+import com.candyz.a7center.manager.OptionsManager;
 import com.candyz.a7center.manager.ResourcesManager;
 import com.candyz.a7center.manager.SceneManager;
 
@@ -27,24 +35,63 @@ public class GameActivity extends SimpleBaseGameActivity
 
     private ResourcesManager resourcesManager;
 
-    /*@Override
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }*/
 
-    /*public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback) throws IOException
-    {
-        //SceneManager.getInstance().createSplashScene(pOnCreateSceneCallback);
-        //SceneManager.getInstance().createGameScene(mEngine, pOnCreateSceneCallback);
-    }*/
+        int MyVersion = Build.VERSION.SDK_INT;
+        if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            if (!checkIfAlreadyhavePermission()) {
+                requestForSpecificPermission();
+            }
+        }
 
+        OptionsManager.getInstance().init(this);
+
+        if(OptionsManager.getInstance().get("player_name") == null)
+        {
+            this.startActivity(new Intent(this, BasicDetailsActivity.class));
+        }
+    }
     @Override
     protected void onCreateResources()
     {
 
+
+
     }
+
+    private boolean checkIfAlreadyhavePermission() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void requestForSpecificPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 101:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    resourcesManager.mHasVibratePermission = true;
+                    //granted
+                } else {
+                    //not granted
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws IOException
     {
         ResourcesManager.prepareManager(mEngine, this, camera, getVertexBufferObjectManager());
@@ -69,6 +116,7 @@ public class GameActivity extends SimpleBaseGameActivity
     @Override
     protected Scene onCreateScene()
     {
+
         /*Scene scene = new Scene();
         scene.setBackground(new Background(0.09804f, 0.6274f, 0.8784f));
         return scene;*/
@@ -98,4 +146,6 @@ public class GameActivity extends SimpleBaseGameActivity
         super.onDestroy();
         System.exit(0);
     }
+
+
 }

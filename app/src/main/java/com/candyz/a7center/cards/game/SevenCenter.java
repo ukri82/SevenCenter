@@ -36,9 +36,9 @@ public class SevenCenter implements IPlayListener
         mDeckFactory = deckFactory;
     }
 
-    public void startGame(String interactivePlayerId, int numPlayers)
+    public void startGame(int numPlayers)
     {
-        mPlayerList = mPlayerFactory.create(interactivePlayerId, numPlayers);
+        mPlayerList = mPlayerFactory.create(numPlayers);
         mDeck = mDeckFactory.create();
         mTray = new SevenCenterTray();
         mScoreCard = new ArrayList<>();

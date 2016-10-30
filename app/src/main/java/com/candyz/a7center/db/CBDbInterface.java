@@ -71,6 +71,23 @@ public class CBDbInterface
         return rawExecute(sql, params);
     }
 
+    public Cursor getOptions()
+    {
+        String[] params = new String[]{};
+
+        String sql = "SELECT *  FROM option";
+        return rawExecute(sql, params);
+    }
+
+    public long setOption(String key, String value)
+    {
+        ContentValues values = new ContentValues();
+        values.put("key", key);
+        values.put("value", value);
+
+        return mDb.insert("option", null, values);
+    }
+
     public Cursor rawExecute(String sql, String[] params)
     {
         try

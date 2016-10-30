@@ -7,6 +7,7 @@ import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.IPlayerFactory;
 import com.candyz.a7center.cards.model.Player;
 import com.candyz.a7center.db.CBDbInterface;
+import com.candyz.a7center.manager.OptionsManager;
 
 import java.util.ArrayList;
 
@@ -38,9 +39,9 @@ public class PlayerFactory implements IPlayerFactory
 
 
     @Override
-    public ArrayList<Player> create(String interactivePlayerId, int numPlayers)
+    public ArrayList<Player> create(int numPlayers)
     {
-        ArrayList<Player> playerList = createPlayerList(interactivePlayerId, numPlayers);
+        ArrayList<Player> playerList = createPlayerList(numPlayers);
 
         Utils.shuffle(playerList);
 
@@ -58,27 +59,25 @@ public class PlayerFactory implements IPlayerFactory
         return numbers;
     }
 
-    private ArrayList<Player> createPlayerList(String interactivePlayerId, int numPlayers)
+    private ArrayList<Player> createPlayerList(int numPlayers)
     {
-        ArrayList<Integer> randomIndices = getRandomIndices();
+
         ArrayList<Player> playerList = new ArrayList<>();
-        for(int i = 0; i < numPlayers; i++)
+
+        playerList.add(createInteractivePlayer());
+
+        ArrayList<Integer> randomIndices = getRandomIndices();
+
+        for(int i = 0; i < numPlayers - 1; i++)
         {
-            String id = "" + (i + 1);
-            //playerList.add(new Player(id, "Player " + (i + 1), true, "players/" + (i % 20 + 1) + ".png"));
-            playerList.add(mPlayerCache.get(randomIndices.get(i)));
-            if (id.compareTo(interactivePlayerId) == 0)
-            {
-                playerList.get(i).setInteractive();
-                playerList.get(i).attachBrain(new InteractiveBrain());
-            }
-            else
-            {
-                playerList.get(i).attachBrain(new SimulatedBrain());
-            }
+            Player p = mPlayerCache.get(randomIndices.get(i));
+            p.attachBrain(new SimulatedBrain());
+            playerList.add(p);
         }
+
         return playerList;
     }
+
 
     public void init()
     {
@@ -104,5 +103,17 @@ public class PlayerFactory implements IPlayerFactory
         String playerURL = "players/" + player.getString(player.getColumnIndex("photo_url"));
         int brilliancy = player.getInt(player.getColumnIndex("brilliancy"));
         return new Player(anId + "", name, gender == 0, playerURL, brilliancy);
+    }
+
+    private Player createInteractivePlayer()
+    {
+        OptionsManager.getInstance().readOptions();
+        String interactivePlayerName = OptionsManager.getInstance().get("player_name");
+        String interactivePlayerId = OptionsManager.getInstance().get("player_id");
+
+        Player interactivePlayer = new Player(interactivePlayerId, interactivePlayerName, true, "players/10.png", 3);
+        interactivePlayer.setInteractive();
+        interactivePlayer.attachBrain(new InteractiveBrain());
+        return interactivePlayer;
     }
 }

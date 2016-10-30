@@ -98,6 +98,11 @@ public class BaseView
         mSprite.setHeight(mHeight);
     }
 
+    public Context getContext()
+    {
+        return mDispBundle.mContext;
+    }
+
     public void setPosition(float x, float y)
     {
         //Log.d("", "CardView.setPosition (" + x + ", " + y + ")");

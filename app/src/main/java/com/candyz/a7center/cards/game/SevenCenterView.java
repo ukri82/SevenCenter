@@ -13,8 +13,6 @@ import com.candyz.a7center.cards.view.ScoreCardView;
 import com.candyz.a7center.cards.view.TableView;
 
 import org.andengine.entity.sprite.ButtonSprite;
-import org.andengine.opengl.texture.TextureOptions;
-import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
 
 import java.util.ArrayList;
 
@@ -57,6 +55,9 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
 
 
         mDeckView.setPosition(mScoreCardView.getX(), mScoreCardView.getY() + mScoreCardView.getHeight());
+
+
+
     }
 
     private void reset()
@@ -72,7 +73,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
         mScoreCardView = new ScoreCardView(mDispBundle);
         mScoreCardView.setPosition(mTableView.getX() + mTableView.getWidth(), mPlayButton.getY() + mPlayButton.getHeight() + 5);
         mScoreCardView.setWidth(mDispBundle.mCamera.getWidth() - mTableView.getWidth());
-        mScoreCardView.setHeight(mDispBundle.mCamera.getHeight() - mScoreCardView.getY() - mDeckView.getHeight());
+        mScoreCardView.setHeight(mDispBundle.mCamera.getHeight() - mScoreCardView.getY() - mDeckView.getHeight() - mChatView.getHeight());
         mScoreCardView.setPlayers(mSevenCenter.getPlayerList());
         mScoreCardView.show();
     }
@@ -81,21 +82,13 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     {
         mChatView.setPosition(0, mTableView.getHeight());
         mChatView.setHeight(mDispBundle.mCamera.getHeight() - mTableView.getHeight());
-        mChatView.setWidth(mTableView.getWidth());
+        mChatView.setWidth(mDispBundle.mCamera.getWidth());
         mChatView.show();
     }
 
     private void startNewRound()
     {
         reset();
-        /*try
-        {
-            Thread.sleep(2000);
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }*/
         mSevenCenter.startNewRound();
         initializeHandViews();
         mSevenCenter.triggerGame();
@@ -117,6 +110,8 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
             public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY)
             {
                 startNewRound();
+
+                //mDispBundle.mActivity.startActivity(new Intent(mDispBundle.mActivity, BasicDetailsActivity.class));
             }
         });
     }
