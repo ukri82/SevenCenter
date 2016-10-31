@@ -1,5 +1,8 @@
 package com.candyz.a7center.cards.game;
 
+import android.content.Intent;
+
+import com.candyz.a7center.OptionsActivity;
 import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.model.Hand;
 import com.candyz.a7center.cards.model.IPlayListener;
@@ -48,7 +51,8 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
                 mDispBundle.mCamera.getWidth() * mTableViewWidthPercent, mDispBundle.mCamera.getHeight() * mTableViewHeightPercent, dispBundle);
 
         mSevenCenter.registerPlayListener(this);
-        loadPlayButtonGraphics();
+        createPlayButton();
+        createOptionsButton();
         positionChatView();
         mDeckView = new DeckView(mSevenCenter.getDeck(), mDispBundle);
         createScoreCardView();
@@ -71,7 +75,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     private void createScoreCardView()
     {
         mScoreCardView = new ScoreCardView(mDispBundle);
-        mScoreCardView.setPosition(mTableView.getX() + mTableView.getWidth(), mPlayButton.getY() + mPlayButton.getHeight() + 5);
+        mScoreCardView.setPosition(mTableView.getX() + mTableView.getWidth(), mOptionsButton.getY() + mOptionsButton.getHeight() + 5);
         mScoreCardView.setWidth(mDispBundle.mCamera.getWidth() - mTableView.getWidth());
         mScoreCardView.setHeight(mDispBundle.mCamera.getHeight() - mScoreCardView.getY() - mDeckView.getHeight() - mChatView.getHeight());
         mScoreCardView.setPlayers(mSevenCenter.getPlayerList());
@@ -95,9 +99,9 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     }
 
     BaseView mPlayButton;
-    private void loadPlayButtonGraphics()
+    private void createPlayButton()
     {
-        mPlayButton = new BaseView("play_button.png", 1024, 1024, mDispBundle);
+        mPlayButton = new BaseView("play_button.png", 256, 256, mDispBundle);
         mPlayButton.setPosition(mTableView.getX() + mTableView.getWidth(), 10);
         mPlayButton.setHeight(100);
         mPlayButton.setWidth(mDispBundle.mCamera.getWidth() * (1 - mTableViewWidthPercent));
@@ -110,8 +114,26 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
             public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY)
             {
                 startNewRound();
+            }
+        });
+    }
 
-                //mDispBundle.mActivity.startActivity(new Intent(mDispBundle.mActivity, BasicDetailsActivity.class));
+    BaseView mOptionsButton;
+    private void createOptionsButton()
+    {
+        mOptionsButton = new BaseView("options_button.png", 256, 256, mDispBundle);
+        mOptionsButton.setPosition(mTableView.getX() + mTableView.getWidth(), mPlayButton.getY() + mPlayButton.getHeight() + 5);
+        mOptionsButton.setHeight(100);
+        mOptionsButton.setWidth(mDispBundle.mCamera.getWidth() * (1 - mTableViewWidthPercent));
+        mOptionsButton.show();
+
+        mDispBundle.mScene.registerTouchArea(mOptionsButton.getSprite());
+        mOptionsButton.getSprite().setOnClickListener(new ButtonSprite.OnClickListener()
+        {
+            @Override
+            public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY)
+            {
+                mDispBundle.mActivity.startActivity(new Intent(mDispBundle.mActivity, OptionsActivity.class));
             }
         });
     }

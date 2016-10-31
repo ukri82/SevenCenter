@@ -26,9 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".BasicDetailsActivity"
-                  android:screenOrientation="landscape">>
-
+        <activity
+            android:name=".BasicDetailsActivity"
+            android:screenOrientation="landscape">
+            >
+        </activity>
+        <activity
+            android:name=".OptionsActivity"
+            android:screenOrientation="landscape">
+            >
+        </activity>
+        <activity android:name=".AvatarSelectorActivity">
         </activity>
     </application>
 

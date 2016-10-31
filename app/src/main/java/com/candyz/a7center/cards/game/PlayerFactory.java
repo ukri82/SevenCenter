@@ -110,8 +110,9 @@ public class PlayerFactory implements IPlayerFactory
         OptionsManager.getInstance().readOptions();
         String interactivePlayerName = OptionsManager.getInstance().get("player_name");
         String interactivePlayerId = OptionsManager.getInstance().get("player_id");
+        String interactivePlayerPhoto = OptionsManager.getInstance().get("player_image");
 
-        Player interactivePlayer = new Player(interactivePlayerId, interactivePlayerName, true, "players/10.png", 3);
+        Player interactivePlayer = new Player(interactivePlayerId, interactivePlayerName, true, interactivePlayerPhoto, 3);
         interactivePlayer.setInteractive();
         interactivePlayer.attachBrain(new InteractiveBrain());
         return interactivePlayer;

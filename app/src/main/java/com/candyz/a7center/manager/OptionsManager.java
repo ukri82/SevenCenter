@@ -57,7 +57,7 @@ public class OptionsManager
     public void set(String key, String value)
     {
         mOptions.put(key, value);
-        mDbHelper.setOption(key, value);
+        long retVal = mDbHelper.setOption(key, value);
     }
 
     public void readOptions()

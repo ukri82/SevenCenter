@@ -4,4 +4,8 @@
     <string name="input_name">Your name</string>
     <string name="input_number">Your number</string>
     <string name="basic_details_accept">Done</string>
+    <string name="input_photo">Your avatar</string>
+    <string name="choose_avatar">Choose Avatar</string>
+    <string name="pass_automatic_hint">Pass automatically when no card</string>
+    <string name="play_automatic_hint">Play automatically when single card</string>
 </resources>

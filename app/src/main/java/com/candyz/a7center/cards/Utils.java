@@ -1,7 +1,15 @@
 package com.candyz.a7center.cards;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.candyz.a7center.cards.model.Card;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -39,5 +47,18 @@ public class Utils
             entries.set(i, entries.get(nextIndex));
             entries.set(nextIndex, temp);
         }
+    }
+
+    public static Bitmap getBitmapFromAsset(Context c, String strName)
+    {
+        AssetManager assetManager = c.getAssets();
+        InputStream istr = null;
+        try {
+            istr = assetManager.open(strName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Bitmap bitmap = BitmapFactory.decodeStream(istr);
+        return bitmap;
     }
 }
