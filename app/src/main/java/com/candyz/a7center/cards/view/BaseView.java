@@ -105,7 +105,6 @@ public class BaseView
 
     public void setPosition(float x, float y)
     {
-        //Log.d("", "CardView.setPosition (" + x + ", " + y + ")");
         mSprite.setPosition(x, y);
     }
     public float getX()
@@ -146,6 +145,14 @@ public class BaseView
 
         setSpriteProperties(sprite, width, height);
         return sprite;
+    }
+
+    protected void updateSprite()
+    {
+        hide();
+        mSprite.dispose();
+        loadGraphics();
+        show();
     }
 
     private void setSpriteProperties(Sprite sprite, float width, float height)

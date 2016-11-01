@@ -20,7 +20,20 @@ import java.util.Set;
 
 public class OptionsManager
 {
-    private Map<String, String> mOptions = new HashMap<>();
+    private class Option
+    {
+        public int mId;
+        public String mKey;
+        public String mValue;
+
+        public Option(int id, String key, String value)
+        {
+            mId = id;
+            mKey = key;
+            mValue = value;
+        }
+    }
+    private Map<String, Option> mOptions = new HashMap<>();
 
     private static final OptionsManager INSTANCE = new OptionsManager();
 
@@ -51,35 +64,56 @@ public class OptionsManager
 
     public String get(String key)
     {
-        return mOptions.get(key);
+        String value = null;
+        Option option = mOptions.get(key);
+        if(option != null)
+        {
+            value = option.mValue;
+        }
+        return value;
     }
 
     public void set(String key, String value)
     {
-        mOptions.put(key, value);
-        long retVal = mDbHelper.setOption(key, value);
+        Option option = mOptions.get(key);
+        if(option == null)
+        {
+            int id = (int) mDbHelper.setOption(key, value);
+            option = new Option(id, key, value);
+            mOptions.put(key, option);
+        }
+        else
+        {
+            option.mValue = value;
+            mDbHelper.updateOption(option.mId, option.mKey, option.mValue);
+        }
     }
+
 
     public void readOptions()
     {
         Cursor player = mDbHelper.getOptions();
 
-        if (player != null ) {
-            if  (player.moveToFirst()) {
-                do {
+        if (player != null )
+        {
+            if  (player.moveToFirst())
+            {
+                do
+                {
                     createOptionEntry(player);
-
-                }while (player.moveToNext());
+                }
+                while (player.moveToNext());
             }
         }
         player.close();
     }
 
-    private void createOptionEntry(Cursor option)
+    private void createOptionEntry(Cursor optionCursor)
     {
-        String key = option.getString(option.getColumnIndex("key"));
-        String value = option.getString(option.getColumnIndex("value"));
+        int id = optionCursor.getInt(optionCursor.getColumnIndex("id"));
+        String key = optionCursor.getString(optionCursor.getColumnIndex("key"));
+        String value = optionCursor.getString(optionCursor.getColumnIndex("value"));
 
-        mOptions.put(key, value);
+        mOptions.put(key, new Option(id, key, value));
     }
 }

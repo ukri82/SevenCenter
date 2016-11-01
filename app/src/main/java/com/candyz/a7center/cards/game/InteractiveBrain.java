@@ -3,12 +3,14 @@ package com.candyz.a7center.cards.game;
 import android.content.Context;
 import android.os.Vibrator;
 
+import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.Brain;
 import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.view.CardView;
 import com.candyz.a7center.cards.view.ChatView;
 import com.candyz.a7center.cards.view.HandView;
 import com.candyz.a7center.cards.view.ICardClickHandler;
+import com.candyz.a7center.manager.OptionsManager;
 
 import java.util.ArrayList;
 
@@ -52,12 +54,28 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
     public Card getNextCard()
     {
         ArrayList<CardView> playableCards = getPlayableCards();
+
+        mHandView.prepareInteraction(true, this, playableCards);
+
         if(playableCards.size() == 0)
         {
+            if(OptionsManager.getInstance().get("pass_automatic").equals("true"))
+            {
+                onClick(null);
+                return null;    //  No need to wait for user input
+            }
+
             mChatView.addStatus("Click green button to pass, if you want", false);
         }
 
-        mHandView.prepareInteraction(true, this, playableCards);
+        if(playableCards.size() == 1)
+        {
+            if (OptionsManager.getInstance().get("play_automatic").equals("true"))
+            {
+                Utils.sleep(1000);
+                return playableCards.get(0).getCard();  //  Play the lone card automatically
+            }
+        }
 
         waitForNextPlay();
 

@@ -36,7 +36,8 @@
             android:screenOrientation="landscape">
             >
         </activity>
-        <activity android:name=".AvatarSelectorActivity">
+        <activity android:name=".AvatarSelectorActivity"
+                  android:screenOrientation="landscape">
         </activity>
     </application>
 

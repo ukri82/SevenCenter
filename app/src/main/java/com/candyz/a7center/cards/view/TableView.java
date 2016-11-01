@@ -4,6 +4,7 @@ import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.model.Hand;
 import com.candyz.a7center.cards.model.Player;
 import com.candyz.a7center.cards.model.Tray;
+import com.candyz.a7center.manager.OptionsManager;
 
 import java.util.ArrayList;
 
@@ -73,6 +74,7 @@ public class TableView extends BaseView
         int interactivePlayerIndex = getInteractivePlayerIndex();
         mInteractivePlayerView = new PlayerView(mPlayerList.get(interactivePlayerIndex), mDispBundle);
         mInteractivePlayerView.linkHandView(mHandViews.get(interactivePlayerIndex));
+        mPlayerList.get(interactivePlayerIndex).linkUpdateListener(mInteractivePlayerView);
 
         for (int i = interactivePlayerIndex + 1; i < interactivePlayerIndex + mPlayerList.size(); i++)
         {

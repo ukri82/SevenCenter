@@ -110,4 +110,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		
 		setChildScene(menuChildScene);
 	}
+
+	@Override
+	public void updateScene()
+	{
+
+	}
 }

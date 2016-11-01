@@ -88,6 +88,15 @@ public class CBDbInterface
         return mDb.insert("option", null, values);
     }
 
+    public long updateOption(int id, String key, String value)
+    {
+        ContentValues values = new ContentValues();
+        values.put("key", key);
+        values.put("value", value);
+
+        return mDb.update("option", values, "id="+id, null);
+    }
+
     public Cursor rawExecute(String sql, String[] params)
     {
         try

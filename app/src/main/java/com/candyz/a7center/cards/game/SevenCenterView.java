@@ -1,6 +1,7 @@
 package com.candyz.a7center.cards.game;
 
 import android.content.Intent;
+import android.graphics.Path;
 
 import com.candyz.a7center.OptionsActivity;
 import com.candyz.a7center.cards.model.Card;
@@ -14,6 +15,7 @@ import com.candyz.a7center.cards.view.DisplayBundle;
 import com.candyz.a7center.cards.view.HandView;
 import com.candyz.a7center.cards.view.ScoreCardView;
 import com.candyz.a7center.cards.view.TableView;
+import com.candyz.a7center.manager.OptionsManager;
 
 import org.andengine.entity.sprite.ButtonSprite;
 
@@ -133,7 +135,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
             @Override
             public void onClick(ButtonSprite pButtonSprite, float pTouchAreaLocalX, float pTouchAreaLocalY)
             {
-                mDispBundle.mActivity.startActivity(new Intent(mDispBundle.mActivity, OptionsActivity.class));
+                mDispBundle.mActivity.startActivityForResult(new Intent(mDispBundle.mActivity, OptionsActivity.class), 1);
             }
         });
     }
@@ -164,7 +166,6 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
             ArrayList<CardView> cardViews = new ArrayList<>();
             for(int j = 0; j < hand.get().size(); j++)
             {
-                //cardViews.add(new CardView(hand.get().get(j), mDispBundle));
                 cardViews.add(mDeckView.get(hand.get().get(j)));
             }
 

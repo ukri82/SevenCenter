@@ -9,7 +9,7 @@ import org.andengine.entity.text.Text;
  * Created by u on 03.10.2016.
  */
 
-public class PlayerView  extends BaseView
+public class PlayerView  extends BaseView implements Player.IPlayerListener
 {
     Player mPlayer;
     Text mNameText;
@@ -99,5 +99,22 @@ public class PlayerView  extends BaseView
         {
             mHandView.highlightThru(mPlayer.getBrain().getPlayeableCards());
         }
+    }
+
+    @Override
+    public void onUpdate()
+    {
+        mNameText.setText(mPlayer.getName());
+        mImageURL = mPlayer.getImageURL();
+        float x = mSprite.getX();
+        float y = getY();
+        float width = mSprite.getWidth();
+        float height = getHeight();
+
+        updateSprite();
+
+        setPosition(x, y);
+        setWidth(width);
+        setHeight(height);
     }
 }

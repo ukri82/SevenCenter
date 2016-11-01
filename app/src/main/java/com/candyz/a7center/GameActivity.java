@@ -63,6 +63,20 @@ public class GameActivity extends SimpleBaseGameActivity
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == 1)
+        {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK)
+            {
+                OptionsManager.getInstance().readOptions();
+                SceneManager.getInstance().getCurrentScene().updateScene();
+            }
+        }
+    }
+
     private boolean checkIfAlreadyhavePermission() {
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE);
         if (result == PackageManager.PERMISSION_GRANTED) {

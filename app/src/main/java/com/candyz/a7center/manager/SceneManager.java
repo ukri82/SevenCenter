@@ -110,7 +110,8 @@ public class SceneManager
 	{
         ResourcesManager.getInstance().loadMenuResources();
         ResourcesManager.getInstance().loadGameResources();
-        return new GameScene();
+		currentScene = new GameScene();
+        return currentScene;
         //setScene(gameScene);
         //pOnCreateSceneCallback.onCreateSceneFinished(gameScene);
 	}

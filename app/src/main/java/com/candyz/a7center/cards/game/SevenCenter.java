@@ -8,6 +8,7 @@ import com.candyz.a7center.cards.model.IPlayListener;
 import com.candyz.a7center.cards.model.IPlayerFactory;
 import com.candyz.a7center.cards.model.Player;
 import com.candyz.a7center.cards.model.Tray;
+import com.candyz.a7center.manager.OptionsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,6 +109,18 @@ public class SevenCenter implements IPlayListener
             hands.add(new Hand(cardList));
         }
         return hands;
+    }
+
+    public void updateInteractivePlayer()
+    {
+        for(int i = 0; i < mPlayerList.size(); i++)
+        {
+            if(mPlayerList.get(i).isInteractive())
+            {
+                mPlayerList.get(i).update(OptionsManager.getInstance().get("player_name"), OptionsManager.getInstance().get("player_image"));
+            }
+        }
+
     }
 
     public ArrayList<Player> getPlayerList()

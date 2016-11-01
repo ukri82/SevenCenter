@@ -22,6 +22,13 @@ public class Player
 
     Tray mTray;
 
+    public interface IPlayerListener
+    {
+        public void onUpdate();
+    }
+
+    IPlayerListener mUpdateListener;
+
     public Player(String id, String name, boolean isFemale, String photoURL, int brilliancy)
     {
         mPhotoURL = photoURL;
@@ -31,6 +38,10 @@ public class Player
         mBrilliancy = brilliancy;
     }
 
+    public void linkUpdateListener(IPlayerListener listener)
+    {
+        mUpdateListener = listener;
+    }
     public void linkTray(Tray t)
     {
         mTray = t;
@@ -60,6 +71,14 @@ public class Player
     {
         return mName;
     }
+    public void update(String name, String url)
+    {
+        mName = name;
+        mPhotoURL = url;
+        if(mUpdateListener != null)
+            mUpdateListener.onUpdate();
+    }
+
     public boolean isFemale()
     {
         return mIsFemale;

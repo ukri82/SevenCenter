@@ -1,5 +1,6 @@
 package com.candyz.a7center.cards.game;
 
+import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.Brain;
 import com.candyz.a7center.cards.model.Card;
 
@@ -158,14 +159,7 @@ public class SimulatedBrain extends Brain
     @Override
     public Card getNextCard()
     {
-        try
-        {
-            Thread.sleep(1000 + mRandom.nextInt(500 + (3 - mBrilliancy) * 1000));
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        Utils.sleep(1000 + mRandom.nextInt(500 + (3 - mBrilliancy) * 1000));
 
         Card nextCard = null;
         if(mBrilliancy == 3)
@@ -187,13 +181,8 @@ public class SimulatedBrain extends Brain
 
     public Card getNextCard1()
     {
-        try
-        {
-            Thread.sleep(2000);
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        Utils.sleep(2000);
+
         int nextSuit = -1;
         for(int i = 0; i < mSortedHand.size(); i++)
         {

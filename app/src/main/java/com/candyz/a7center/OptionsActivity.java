@@ -27,6 +27,20 @@ public class OptionsActivity extends AppCompatActivity
 
         OptionsManager.getInstance().init(this);
 
+        initializeUI();
+
+        findViewById(R.id.accept_detais).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                updateOptions();
+            }
+        });
+    }
+
+    void initializeUI()
+    {
         EditText edit = (EditText)findViewById(R.id.input_name);
         edit.setText(OptionsManager.getInstance().get("player_name"));
 
@@ -36,10 +50,10 @@ public class OptionsActivity extends AppCompatActivity
         updateAvatar();
 
         CheckBox c = (CheckBox)findViewById(R.id.play_automatic);
-        c.setChecked(OptionsManager.getInstance().get("play_automatic") == "true");
+        c.setChecked(OptionsManager.getInstance().get("play_automatic").equals("true"));
 
         c = (CheckBox)findViewById(R.id.pass_automatic);
-        c.setChecked(OptionsManager.getInstance().get("pass_automatic") == "true");
+        c.setChecked(OptionsManager.getInstance().get("pass_automatic").equals("true"));
 
         final Activity activity = this;
         mAvatarImgView.setOnClickListener(new View.OnClickListener()
@@ -47,36 +61,45 @@ public class OptionsActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-
                 activity.startActivityForResult(new Intent(activity, AvatarSelectorActivity.class), PICK_AVATAR);
             }
         });
+    }
 
-        findViewById(R.id.accept_detais).setOnClickListener(new View.OnClickListener()
+    void updateOptions()
+    {
+        EditText edit = (EditText)findViewById(R.id.input_name);
+        OptionsManager.getInstance().set("player_name", edit.getText().toString());
+        edit = (EditText)findViewById(R.id.input_number);
+        OptionsManager.getInstance().set("player_number", edit.getText().toString());
+
+        CheckBox c = (CheckBox)findViewById(R.id.play_automatic);
+        String status = "false";
+        if(c.isChecked())
+            status = "true";
+        OptionsManager.getInstance().set("play_automatic", status);
+
+        c = (CheckBox)findViewById(R.id.pass_automatic);
+        status = "false";
+        if(c.isChecked())
+            status = "true";
+        OptionsManager.getInstance().set("pass_automatic", status);
+
+        finishCurrentActivity();
+    }
+
+    public void finishCurrentActivity()
+    {
+        Intent data = new Intent();
+        if (getParent() == null)
         {
-            @Override
-            public void onClick(View view)
-            {
-                EditText edit = (EditText)findViewById(R.id.input_name);
-                OptionsManager.getInstance().set("player_name", edit.getText().toString());
-                edit = (EditText)findViewById(R.id.input_number);
-                OptionsManager.getInstance().set("player_number", edit.getText().toString());
-
-                CheckBox c = (CheckBox)findViewById(R.id.play_automatic);
-                String status = "false";
-                if(c.isChecked())
-                    status = "true";
-                OptionsManager.getInstance().set("play_automatic", status);
-
-                c = (CheckBox)findViewById(R.id.pass_automatic);
-                status = "false";
-                if(c.isChecked())
-                    status = "true";
-                OptionsManager.getInstance().set("pass_automatic", status);
-
-                finish();
-            }
-        });
+            setResult(Activity.RESULT_OK, data);
+        }
+        else
+        {
+            getParent().setResult(Activity.RESULT_OK, data);
+        }
+        finish();
     }
 
     void updateAvatar()

@@ -33,4 +33,10 @@ public class LoadingScene extends BaseScene
 	{
 
 	}
+
+	@Override
+	public void updateScene()
+	{
+
+	}
 }

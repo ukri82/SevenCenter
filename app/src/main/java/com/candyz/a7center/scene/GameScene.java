@@ -14,6 +14,7 @@ import com.candyz.a7center.manager.SceneManager;
 public class GameScene extends BaseScene
 {
 	SevenCenterView mSevenCenterView;
+	SevenCenter mSevenCenter;
 	
 	@Override
 	public void createScene()
@@ -21,15 +22,22 @@ public class GameScene extends BaseScene
 
         DisplayBundle dBundle = new DisplayBundle(activity, resourcesManager.activity.getTextureManager(), vbom,
                 this, resourcesManager.engine, resourcesManager.activity, resourcesManager.camera, resourcesManager.mGeneralTextFont, resourcesManager.mHasVibratePermission);
-        SevenCenter sevenCenter = new SevenCenter(new PlayerFactory(resourcesManager.activity), new DeckFactory());
-        sevenCenter.startGame(7);
-		mSevenCenterView = new SevenCenterView(sevenCenter, dBundle);
+		mSevenCenter = new SevenCenter(new PlayerFactory(resourcesManager.activity), new DeckFactory());
+		mSevenCenter.startGame(7);
+		mSevenCenterView = new SevenCenterView(mSevenCenter, dBundle);
     }
 
 	@Override
 	public void onBackKeyPressed()
 	{
 
+
+	}
+
+	@Override
+	public void updateScene()
+	{
+		mSevenCenter.updateInteractivePlayer();
 	}
 
 	@Override

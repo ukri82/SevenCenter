@@ -49,4 +49,10 @@ public class SplashScene extends BaseScene
 		this.detachSelf();
 		this.dispose();
 	}
+
+	@Override
+	public void updateScene()
+	{
+
+	}
 }
