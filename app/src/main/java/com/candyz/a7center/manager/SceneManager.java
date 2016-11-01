@@ -108,9 +108,14 @@ public class SceneManager
 
 	public BaseScene createGameScene(final Engine mEngine)
 	{
+		if(gameScene != null)
+		{
+			gameScene.disposeScene();
+		}
         ResourcesManager.getInstance().loadMenuResources();
         ResourcesManager.getInstance().loadGameResources();
-		currentScene = new GameScene();
+		gameScene = new GameScene();
+		currentScene = gameScene;
         return currentScene;
         //setScene(gameScene);
         //pOnCreateSceneCallback.onCreateSceneFinished(gameScene);

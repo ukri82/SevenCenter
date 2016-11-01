@@ -1,10 +1,17 @@
 <resources>
     <string name="app_name">Seven Center</string>
     <string name="name_input_hint">Input Name</string>
-    <string name="input_name">Your name</string>
-    <string name="input_number">Your number</string>
+    <string name="input_name">Nick name</string>
+    <string name="input_number">Number</string>
+    <string name="input_number_of_players">Total players</string>
+    <string name="input_difficulty_level">Difficulty Level</string>
+    <string name="input_difficulty_easy">Easy</string>
+    <string name="input_difficulty_medium">Medium</string>
+    <string name="input_difficulty_hard">Hard</string>
     <string name="basic_details_accept">Done</string>
-    <string name="input_photo">Your avatar</string>
+    <string name="input_photo">Avatar</string>
+    <string name="player_details">Your details</string>
+    <string name="game_options">Game Options</string>
     <string name="choose_avatar">Choose Avatar</string>
     <string name="pass_automatic_hint">Pass automatically when no card</string>
     <string name="play_automatic_hint">Play automatically when single card</string>

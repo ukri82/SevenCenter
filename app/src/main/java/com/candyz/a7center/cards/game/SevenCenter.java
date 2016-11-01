@@ -39,7 +39,9 @@ public class SevenCenter implements IPlayListener
 
     public void startGame(int numPlayers)
     {
-        mPlayerList = mPlayerFactory.create(numPlayers);
+        int diffLevel = Integer.parseInt(OptionsManager.getInstance().get("difficulty_level"));
+
+        mPlayerList = mPlayerFactory.create(numPlayers, diffLevel);
         mDeck = mDeckFactory.create();
         mTray = new SevenCenterTray();
         mScoreCard = new ArrayList<>();

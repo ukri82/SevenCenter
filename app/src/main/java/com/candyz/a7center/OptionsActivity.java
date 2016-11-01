@@ -6,9 +6,13 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.manager.OptionsManager;
@@ -18,6 +22,9 @@ public class OptionsActivity extends AppCompatActivity
 
     static final int PICK_AVATAR = 1;
     ImageView mAvatarImgView;
+
+    String mNumPlayersUpdated = "false";
+    String mDiffLevelUpdated = "false";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,6 +71,26 @@ public class OptionsActivity extends AppCompatActivity
                 activity.startActivityForResult(new Intent(activity, AvatarSelectorActivity.class), PICK_AVATAR);
             }
         });
+
+        Spinner numPlayersSpinner = (Spinner)findViewById(R.id.input_number_of_players);
+        String[] items = new String[]{"3", "4", "5", "6", "7"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.num_players_item, items);
+        numPlayersSpinner.setAdapter(adapter);
+        int numPlayers = Integer.parseInt(OptionsManager.getInstance().get("number_of_players"));
+        numPlayersSpinner.setSelection(numPlayers - 3);
+
+        RadioGroup radio = (RadioGroup)findViewById(R.id.input_difficulty_level);
+        int radioId = R.id.input_medium;
+        String diffLevel = OptionsManager.getInstance().get("difficulty_level");
+        if(diffLevel.equals("1"))
+        {
+            radioId = R.id.input_medium;
+        }
+        else if(diffLevel.equals("3"))
+        {
+            radioId = R.id.input_hard;
+        }
+        radio.check(radioId);
     }
 
     void updateOptions()
@@ -85,12 +112,30 @@ public class OptionsActivity extends AppCompatActivity
             status = "true";
         OptionsManager.getInstance().set("pass_automatic", status);
 
+        Spinner numPlayersSpinner = (Spinner)findViewById(R.id.input_number_of_players);
+        String selectedValue = numPlayersSpinner.getSelectedItem().toString();
+        if(!selectedValue.equals(OptionsManager.getInstance().get("number_of_players")))
+        {
+            OptionsManager.getInstance().set("number_of_players", selectedValue);
+            mNumPlayersUpdated = "true";
+        }
+
+        RadioGroup radio = (RadioGroup)findViewById(R.id.input_difficulty_level);
+        int diffLevel = radio.indexOfChild(findViewById(radio.getCheckedRadioButtonId())) + 1;
+        if(!OptionsManager.getInstance().get("difficulty_level").equals(diffLevel + ""))
+        {
+            OptionsManager.getInstance().set("difficulty_level", diffLevel + "");
+            mDiffLevelUpdated = "true";
+        }
+
         finishCurrentActivity();
     }
 
     public void finishCurrentActivity()
     {
         Intent data = new Intent();
+        data.putExtra("DIFF_LEVEL_UPDATED", mDiffLevelUpdated);
+        data.putExtra("NUM_PLAYERS_UPDATED", mNumPlayersUpdated);
         if (getParent() == null)
         {
             setResult(Activity.RESULT_OK, data);

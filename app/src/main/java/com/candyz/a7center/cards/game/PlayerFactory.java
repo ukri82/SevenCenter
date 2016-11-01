@@ -10,6 +10,8 @@ import com.candyz.a7center.db.CBDbInterface;
 import com.candyz.a7center.manager.OptionsManager;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by u on 03.10.2016.
@@ -20,10 +22,12 @@ public class PlayerFactory implements IPlayerFactory
     ArrayList<Player> mPlayerCache;
     CBDbInterface mDbHelper;
     Context mContext;
+    int mDifficultyLevel = 2;
 
     public PlayerFactory(Context context)
     {
         mContext = context;
+
 
         mDbHelper = new CBDbInterface(mContext);
         mDbHelper.createDatabase();
@@ -39,8 +43,10 @@ public class PlayerFactory implements IPlayerFactory
 
 
     @Override
-    public ArrayList<Player> create(int numPlayers)
+    public ArrayList<Player> create(int numPlayers, int diffLevel)
     {
+        mDifficultyLevel = diffLevel;
+
         ArrayList<Player> playerList = createPlayerList(numPlayers);
 
         Utils.shuffle(playerList);
@@ -59,21 +65,65 @@ public class PlayerFactory implements IPlayerFactory
         return numbers;
     }
 
+    private ArrayList<Player> getPlayersOfBrilliance(int numPlayers, int brilliancy, ArrayList<Integer> randomIndices)
+    {
+        ArrayList<Player> playerList = new ArrayList<>();
+        for(int i = 0; i < randomIndices.size(); i++)
+        {
+            if(mPlayerCache.get(randomIndices.get(i)).getBrilliancy() == brilliancy)
+            {
+                playerList.add(mPlayerCache.get(randomIndices.get(i)));
+                if(playerList.size() == numPlayers)
+                {
+                    break;
+                }
+            }
+
+        }
+        return playerList;
+    }
+
     private ArrayList<Player> createPlayerList(int numPlayers)
     {
 
         ArrayList<Player> playerList = new ArrayList<>();
 
-        playerList.add(createInteractivePlayer());
-
         ArrayList<Integer> randomIndices = getRandomIndices();
 
-        for(int i = 0; i < numPlayers - 1; i++)
+        Set<Integer> brillianceLevels = new TreeSet<Integer>();
+        brillianceLevels.add(1);brillianceLevels.add(2);brillianceLevels.add(3);
+
+        int requiredPlayers = numPlayers - 1;
+        int numPlayersOfLevel = (requiredPlayers + 1) / 2;
+        ArrayList<Player> list = getPlayersOfBrilliance(numPlayersOfLevel, mDifficultyLevel, randomIndices);
+        playerList.addAll(list);
+        brillianceLevels.remove(mDifficultyLevel);
+        requiredPlayers -= playerList.size();
+
+        for (int brillianceLevel : brillianceLevels)
         {
-            Player p = mPlayerCache.get(randomIndices.get(i));
-            p.attachBrain(new SimulatedBrain());
-            playerList.add(p);
+            numPlayersOfLevel = (requiredPlayers + 1)/ brillianceLevels.size();
+            list = getPlayersOfBrilliance(numPlayersOfLevel, brillianceLevel, randomIndices);
+
+            for(int i = 0; i < list.size(); i++)
+            {
+                if(playerList.size() < numPlayers - 1)
+                    playerList.add(list.get(i));
+            }
+
+            if(playerList.size() == numPlayers - 1)
+            {
+                break;
+            }
         }
+
+        for (int i = 0; i < playerList.size(); i++)
+        {
+            Player p = playerList.get(i);
+            p.attachBrain(new SimulatedBrain());
+        }
+
+        playerList.add(createInteractivePlayer());
 
         return playerList;
     }

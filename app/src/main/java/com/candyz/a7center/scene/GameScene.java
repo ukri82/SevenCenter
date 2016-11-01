@@ -8,6 +8,7 @@ import com.candyz.a7center.cards.game.SevenCenter;
 import com.candyz.a7center.cards.game.SevenCenterView;
 
 import com.candyz.a7center.cards.view.DisplayBundle;
+import com.candyz.a7center.manager.OptionsManager;
 import com.candyz.a7center.manager.SceneManager;
 
 
@@ -23,7 +24,8 @@ public class GameScene extends BaseScene
         DisplayBundle dBundle = new DisplayBundle(activity, resourcesManager.activity.getTextureManager(), vbom,
                 this, resourcesManager.engine, resourcesManager.activity, resourcesManager.camera, resourcesManager.mGeneralTextFont, resourcesManager.mHasVibratePermission);
 		mSevenCenter = new SevenCenter(new PlayerFactory(resourcesManager.activity), new DeckFactory());
-		mSevenCenter.startGame(7);
+		int numPlayers = Integer.parseInt(OptionsManager.getInstance().get("number_of_players"));
+		mSevenCenter.startGame(numPlayers);
 		mSevenCenterView = new SevenCenterView(mSevenCenter, dBundle);
     }
 
@@ -33,6 +35,8 @@ public class GameScene extends BaseScene
 
 
 	}
+
+
 
 	@Override
 	public void updateScene()

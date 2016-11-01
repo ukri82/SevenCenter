@@ -72,7 +72,18 @@ public class GameActivity extends SimpleBaseGameActivity
             if (resultCode == RESULT_OK)
             {
                 OptionsManager.getInstance().readOptions();
-                SceneManager.getInstance().getCurrentScene().updateScene();
+
+                String diffLevelUpdated = data.getStringExtra("DIFF_LEVEL_UPDATED");
+                String numPlayersUpdated = data.getStringExtra("NUM_PLAYERS_UPDATED");
+                if(diffLevelUpdated.equals("true") || numPlayersUpdated.equals("true"))
+                {
+                    SceneManager.getInstance().createGameScene(mEngine);
+                    SceneManager.getInstance().setScene(SceneManager.SceneType.SCENE_GAME);
+                }
+                else
+                {
+                    SceneManager.getInstance().getCurrentScene().updateScene();
+                }
             }
         }
     }
