@@ -54,13 +54,9 @@ public class CardView extends BaseView
         super(card.getBackImageURL(), mOrigCardWidth, mOrigCardHeight, displayBundle);
 
         mCard = card;
-
-        //mTextureAtlas = cardAtlas;
         loadBgGraphics();
 
         show();
-
-        //load();
     }
 
     private void loadBgGraphics()
@@ -79,17 +75,6 @@ public class CardView extends BaseView
 
         mCardFgSprite = createSprite(mCardFgRegion, mWidth, mHeight);
     }
-
-    /*private void load()
-    {
-        //mFgTextureAtlas = new BuildableBitmapTextureAtlas(mDispBundle.mTextureManager, 1024, 1024, TextureOptions.BILINEAR);
-
-        mCardFgRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mTextureAtlas, mDispBundle.mContext, mCard.getImageURL());
-
-        loadGraphics();
-
-        mCardFgSprite = createSprite(mCardFgRegion, mWidth, mHeight);
-    }*/
 
     private void createBorder()
     {

@@ -65,7 +65,7 @@ public class InteractiveBrain extends Brain implements ICardClickHandler
                 return null;    //  No need to wait for user input
             }
 
-            mChatView.addStatus("Click green button to pass, if you want", false);
+            mChatView.addStatus("Click pass button, if you want", false);
         }
 
         if(playableCards.size() == 1)

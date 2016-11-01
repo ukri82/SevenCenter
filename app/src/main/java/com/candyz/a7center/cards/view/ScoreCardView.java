@@ -1,5 +1,6 @@
 package com.candyz.a7center.cards.view;
 
+import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.Player;
 
 import org.andengine.entity.text.Text;
@@ -15,11 +16,13 @@ public class ScoreCardView extends BaseView
     ArrayList<Player> mPlayerList;
     ArrayList<Text> mPlayerNames;
     ArrayList<Text> mScoreInfo;
-    final float mPlayerInfoHeight = 50f;
+    float mPlayerInfoHeight = 50f;
 
     public ScoreCardView(DisplayBundle displayBundle)
     {
         super("chat_bg.png", 1024, 1024, displayBundle);
+
+        mPlayerInfoHeight = Utils.toPx(mDispBundle.mActivity, 15);
     }
 
     public void setPlayers(ArrayList<Player> players)

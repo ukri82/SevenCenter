@@ -1,6 +1,8 @@
 package com.candyz.a7center.cards.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.DisplayMetrics;
 
 import com.candyz.a7center.GameActivity;
 import com.candyz.a7center.base.BaseScene;
@@ -45,4 +47,6 @@ public class DisplayBundle
         mGeneralTextFont = font;
         mHasVibratePermission = hasVibratePermission;
     }
+
+
 }

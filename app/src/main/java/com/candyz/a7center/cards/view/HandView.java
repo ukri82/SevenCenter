@@ -1,5 +1,6 @@
 package com.candyz.a7center.cards.view;
 
+import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.model.Hand;
 
@@ -15,7 +16,7 @@ public class HandView extends BaseView
 {
     Hand mHand;
     ArrayList<CardView> mCardViews;
-    private final static int mXMargin = 20;
+    private static float mXMargin = 20;
     float mCardDisplayGap = 15;
     boolean mIsOnRight = false;
     boolean mIsOpen = false;
@@ -32,11 +33,21 @@ public class HandView extends BaseView
 
         show();
 
-        mIndicatorY = new BaseView("yellowlight.png", 64, 64, dBundle);
-        mIndicatorG = new BaseView("greenlight.png", 64, 64, dBundle);
-        mIndicatorR = new BaseView("redlight.png", 64, 64, dBundle);
+        mIndicatorY = createIndicator("yellowlight.png");
+        mIndicatorG = createIndicator("greenlight.png");
+        mIndicatorR = createIndicator("redlight.png");
+
         mPassButton = new BaseView("pass_button.png", 256, 256, dBundle);
+        mPassButton.setHeight(Utils.toPx(mDispBundle.mActivity, 32));
         showIndicator(mIndicatorY);
+    }
+
+    private BaseView createIndicator(String imageURL)
+    {
+        BaseView indicator = new BaseView(imageURL, 64, 64, mDispBundle);
+        indicator.setWidth(Utils.toPx(mDispBundle.mActivity, 32));
+        indicator.setHeight(Utils.toPx(mDispBundle.mActivity, 32));
+        return indicator;
     }
 
     public void linkCardViews(Hand hand, ArrayList<CardView> cardViews)
@@ -89,6 +100,20 @@ public class HandView extends BaseView
         return mIsOnRight;
     }
 
+    private void calculateCardGap(float cardSizeRatio)
+    {
+        mCardDisplayGap = 10;
+        mXMargin = getWidth() * 0.02f;
+        if(mCardViews.size() > 0)
+        {
+            float totalAvailableWidth = getWidth() - mXMargin * 2;
+            if (!mIsOpen)
+            {
+                totalAvailableWidth -= (mIndicatorY.getWidth() + mCardViews.get(0).getWidth() * cardSizeRatio);
+            }
+            mCardDisplayGap = totalAvailableWidth / mCardViews.size();
+        }
+    }
     private void placeCards()
     {
 
@@ -97,20 +122,8 @@ public class HandView extends BaseView
             return;
         }
 
-        float cardSizeRatio = 1;
-        mCardDisplayGap = 20;
-        if(mCardViews.size() > 0)
-        {
-            if (mIsOpen)
-            {
-                mCardDisplayGap = (getWidth() - mXMargin * 2) / mCardViews.size();
-            } else
-            {
-                mCardDisplayGap = (getWidth() - mXMargin * 2 - mIndicatorY.getWidth() - mCardViews.get(0).getWidth()) / mCardViews.size();
-            }
-
-            cardSizeRatio = getHeight() * 0.75f / mCardViews.get(0).getHeight();
-        }
+        float cardSizeRatio = getHeight() * 0.80f / mCardViews.get(0).getHeight();
+        calculateCardGap(cardSizeRatio);
 
         for(int i = 0; i < mCardViews.size(); i++)
         {

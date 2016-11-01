@@ -5,6 +5,7 @@ package com.candyz.a7center.manager;
  */
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.BoundCamera;
@@ -25,6 +26,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
 import com.candyz.a7center.GameActivity;
+import com.candyz.a7center.cards.Utils;
 
 /**
  * @author Mateusz Mysliwiec
@@ -131,7 +133,9 @@ public class ResourcesManager
     {
         final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 
-        mGeneralTextFont = FontFactory.createStroke(engine.getFontManager(), mainFontTexture, Typeface.create("sans-serif", Typeface.BOLD), 24f, true, Color.WHITE, 2f, Color.WHITE);
+        float pixelSize = Utils.toPx(activity, 10);
+
+        mGeneralTextFont = FontFactory.createStroke(engine.getFontManager(), mainFontTexture, Typeface.create("sans-serif", Typeface.NORMAL), pixelSize, true, Color.WHITE, 1f, Color.WHITE);
         mGeneralTextFont.load();
     }
 

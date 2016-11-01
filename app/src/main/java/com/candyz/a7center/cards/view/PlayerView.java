@@ -1,5 +1,6 @@
 package com.candyz.a7center.cards.view;
 
+import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.Player;
 
 import org.andengine.entity.text.Text;
@@ -17,6 +18,7 @@ public class PlayerView  extends BaseView implements Player.IPlayerListener
     int mNameGap = 5;
     int mVMargin = 5;
 
+
     HandView mHandView;
 
     public PlayerView(Player player, DisplayBundle dispBundle)
@@ -25,12 +27,16 @@ public class PlayerView  extends BaseView implements Player.IPlayerListener
 
         mPlayer = player;
 
+        mNameGap = (int)Utils.toPx(dispBundle.mActivity, 5);
+        mVMargin = (int)Utils.toPx(dispBundle.mActivity, 5);
+
         show();
 
         mNameText = new Text(getX(), getY(), mDispBundle.mGeneralTextFont, player.getName(), mDispBundle.mVBOM);
         dispBundle.mScene.attachChild(mNameText);
 
-        createBrilliancyView();
+        if(!mPlayer.isInteractive())
+            createBrilliancyView();
     }
 
     void createBrilliancyView()
@@ -45,14 +51,24 @@ public class PlayerView  extends BaseView implements Player.IPlayerListener
 
     public float getHeight()
     {
-        return mSprite.getHeight() + mNameText.getHeight() + mBrilliancyView.getHeight() + mNameGap + mVMargin;
+        float height = mSprite.getHeight() + mNameText.getHeight() + mNameGap + mVMargin;
+        if(mBrilliancyView != null)
+            height = height + mBrilliancyView.getHeight() + mNameGap;
+
+        return height;
     }
 
     public void setPosition(float x, float y)
     {
         mNameText.setPosition(x, y);
-        mBrilliancyView.setPosition(x, y + mNameText.getHeight());
-        mSprite.setPosition(x, mBrilliancyView.getY() + mBrilliancyView.getHeight() + mNameGap);
+        float currPos = y + mNameText.getHeight() + mNameGap;
+
+        if(mBrilliancyView != null)
+        {
+            mBrilliancyView.setPosition(x, currPos);
+            currPos += mBrilliancyView.getHeight() + mNameGap;
+        }
+        mSprite.setPosition(x, currPos);
     }
 
     public void setHeight(float height)
@@ -60,7 +76,8 @@ public class PlayerView  extends BaseView implements Player.IPlayerListener
         float ratio = height / getHeight();
         mSprite.setHeight(mSprite.getHeight() * ratio);
         mNameText.setHeight(mNameText.getHeight() * ratio);
-        mBrilliancyView.setHeight(mBrilliancyView.getHeight() * ratio);
+        if(mBrilliancyView != null)
+            mBrilliancyView.setHeight(mBrilliancyView.getHeight() * ratio);
     }
 
     public float getY()
@@ -110,9 +127,11 @@ public class PlayerView  extends BaseView implements Player.IPlayerListener
         float y = getY();
         float width = mSprite.getWidth();
         float height = getHeight();
+        float spriteHeight = mSprite.getHeight();
 
         updateSprite();
 
+        mSprite.setHeight(spriteHeight);
         setPosition(x, y);
         setWidth(width);
         setHeight(height);

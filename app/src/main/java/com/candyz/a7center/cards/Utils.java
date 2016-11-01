@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 
 import com.candyz.a7center.cards.model.Card;
 
@@ -71,5 +72,14 @@ public class Utils
         {
             e.printStackTrace();
         }
+    }
+
+    public static float toPx(Activity activity, float dp)
+    {
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        float pixelSize = dp * dm.scaledDensity;
+
+        return pixelSize;
     }
 }

@@ -1,5 +1,6 @@
 package com.candyz.a7center.cards.view;
 
+import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.model.Hand;
 import com.candyz.a7center.cards.model.Player;
@@ -62,11 +63,17 @@ public class TableView extends BaseView
 
     private void positionInteractivePlayer()
     {
+        if(mPlayerViewList.size() == 0)
+            return;
+
+        mInteractivePlayerView.setHeight(mPlayerViewList.get(0).getHeight() / 2);
+        mInteractivePlayerView.setWidth(mPlayerViewList.get(0).getWidth() / 2);
+
         mInteractivePlayerView.setPosition(mTrayView.getX() + mTrayView.getWidth() / 2 - mInteractivePlayerView.getWidth() / 2, getHeight() - mInteractivePlayerView.getHeight());
 
-        float totalInteractivePlayerAreaHeight = getHeight() - mTrayViewHeight - mInteractivePlayerView.getHeight() - mInteractivePlayerView.getHandView().getIndicatorHeight() - 10f;
+        float totalInteractivePlayerAreaHeight = getHeight() - mTrayViewHeight - mInteractivePlayerView.getHeight() - mInteractivePlayerView.getHandView().getIndicatorHeight() - Utils.toPx(mDispBundle.mActivity, 5);
         mInteractivePlayerView.setHandViewDimensions(getWidth(), totalInteractivePlayerAreaHeight);
-        mInteractivePlayerView.setHandViewPosition(0, getHeight() - totalInteractivePlayerAreaHeight - mInteractivePlayerView.getHeight() - 10f);
+        mInteractivePlayerView.setHandViewPosition(0, getHeight() - totalInteractivePlayerAreaHeight - mInteractivePlayerView.getHeight() - Utils.toPx(mDispBundle.mActivity, 5));
     }
 
     private void createViews()

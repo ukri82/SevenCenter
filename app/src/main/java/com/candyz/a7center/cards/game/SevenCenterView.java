@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Path;
 
 import com.candyz.a7center.OptionsActivity;
+import com.candyz.a7center.cards.Utils;
 import com.candyz.a7center.cards.model.Card;
 import com.candyz.a7center.cards.model.Hand;
 import com.candyz.a7center.cards.model.IPlayListener;
@@ -105,7 +106,8 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     {
         mPlayButton = new BaseView("play_button.png", 256, 256, mDispBundle);
         mPlayButton.setPosition(mTableView.getX() + mTableView.getWidth(), 10);
-        mPlayButton.setHeight(100);
+        int buttonHeight = (int) Utils.toPx(mDispBundle.mActivity, 32);
+        mPlayButton.setHeight(buttonHeight);
         mPlayButton.setWidth(mDispBundle.mCamera.getWidth() * (1 - mTableViewWidthPercent));
         mPlayButton.show();
 
@@ -125,7 +127,8 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     {
         mOptionsButton = new BaseView("options_button.png", 256, 256, mDispBundle);
         mOptionsButton.setPosition(mTableView.getX() + mTableView.getWidth(), mPlayButton.getY() + mPlayButton.getHeight() + 5);
-        mOptionsButton.setHeight(100);
+        int buttonHeight = (int) Utils.toPx(mDispBundle.mActivity, 32);
+        mOptionsButton.setHeight(buttonHeight);
         mOptionsButton.setWidth(mDispBundle.mCamera.getWidth() * (1 - mTableViewWidthPercent));
         mOptionsButton.show();
 
