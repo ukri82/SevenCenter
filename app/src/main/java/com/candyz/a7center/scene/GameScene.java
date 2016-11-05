@@ -55,7 +55,7 @@ public class GameScene extends BaseScene
 	{
 		camera.setHUD(null);
 		camera.setChaseEntity(null); //TODO
-		camera.setCenter(400, 240);
+		//camera.setCenter(400, 240);
 
 		// TODO code responsible for disposing scene
 		// removing all game scene objects.

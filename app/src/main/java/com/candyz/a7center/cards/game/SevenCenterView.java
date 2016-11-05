@@ -43,7 +43,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
 
     public SevenCenterView(SevenCenter sevenCenter, DisplayBundle dispBundle)
     {
-        super("background.png", 1024, 1024, dispBundle);
+        super("background.png", 128, 64, dispBundle);
 
         mSevenCenter = sevenCenter;
         mSevenCenter.registerRoundListener(this);
@@ -104,7 +104,7 @@ public class SevenCenterView extends BaseView implements IPlayListener, SevenCen
     BaseView mPlayButton;
     private void createPlayButton()
     {
-        mPlayButton = new BaseView("play_button.png", 256, 256, mDispBundle);
+        mPlayButton = new BaseView("play_button.png", 256, 128, mDispBundle);
         mPlayButton.setPosition(mTableView.getX() + mTableView.getWidth(), 10);
         int buttonHeight = (int) Utils.toPx(mDispBundle.mActivity, 32);
         mPlayButton.setHeight(buttonHeight);

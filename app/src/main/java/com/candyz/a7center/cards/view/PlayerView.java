@@ -23,7 +23,7 @@ public class PlayerView  extends BaseView implements Player.IPlayerListener
 
     public PlayerView(Player player, DisplayBundle dispBundle)
     {
-        super(player.getImageURL(), 1024, 1024, dispBundle);
+        super(player.getImageURL(), 128, 128, dispBundle);
 
         mPlayer = player;
 
@@ -41,7 +41,7 @@ public class PlayerView  extends BaseView implements Player.IPlayerListener
 
     void createBrilliancyView()
     {
-        mBrilliancyView = new BaseView("bulb" + mPlayer.getBrilliancy() + ".png", 1024, 1024, mDispBundle);
+        mBrilliancyView = new BaseView("bulb" + mPlayer.getBrilliancy() + ".png", 128, 64, mDispBundle);
         float height = super.getHeight() * 0.2f;
         float ratio = height / mBrilliancyView.getHeight() * mPlayer.getBrilliancy();
         mBrilliancyView.setWidth(mBrilliancyView.getWidth() * ratio);

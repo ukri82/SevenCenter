@@ -20,7 +20,7 @@ public class ScoreCardView extends BaseView
 
     public ScoreCardView(DisplayBundle displayBundle)
     {
-        super("chat_bg.png", 1024, 1024, displayBundle);
+        super("chat_bg.png", 64, 64, displayBundle);
 
         mPlayerInfoHeight = Utils.toPx(mDispBundle.mActivity, 15);
     }

@@ -30,7 +30,7 @@ public class TableView extends BaseView
 
     public TableView(ArrayList<Player> playerList, ArrayList<HandView> handViews, Tray t, float width, float height, DisplayBundle dispBundle)
     {
-        super("background.png", 1024, 1024, dispBundle);
+        super("background.png", 128, 64, dispBundle);
 
         setWidth(width);
         setHeight(height);

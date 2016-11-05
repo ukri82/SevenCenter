@@ -17,7 +17,7 @@ public class ChatView extends BaseView
 
     public ChatView(DisplayBundle dispBundle)
     {
-        super("chat_bg.png", 1024, 1024, dispBundle);
+        super("chat_bg.png", 64, 64, dispBundle);
         mMaxString = "                                                                                          ";
         mStatusText = new Text(5, 5, mDispBundle.mGeneralTextFont, mMaxString, mDispBundle.mVBOM);
     }

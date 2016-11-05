@@ -14,7 +14,7 @@ public class TrayView extends BaseView
 
     public TrayView(Tray t, DisplayBundle d)
     {
-        super("tray.png", 1024, 1024, d);
+        super("tray.png", 256, 128, d);
 
         mTray = t;
 

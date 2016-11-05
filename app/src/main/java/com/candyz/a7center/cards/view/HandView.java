@@ -29,7 +29,7 @@ public class HandView extends BaseView
 
     public HandView(DisplayBundle dBundle)
     {
-        super("Hand.png", 512, 512, dBundle);
+        super("Hand.png", 256, 128, dBundle);
 
         show();
 
@@ -37,7 +37,7 @@ public class HandView extends BaseView
         mIndicatorG = createIndicator("greenlight.png");
         mIndicatorR = createIndicator("redlight.png");
 
-        mPassButton = new BaseView("pass_button.png", 256, 256, dBundle);
+        mPassButton = new BaseView("pass_button.png", 256, 128, dBundle);
         mPassButton.setHeight(Utils.toPx(mDispBundle.mActivity, 32));
         showIndicator(mIndicatorY);
     }
@@ -148,7 +148,8 @@ public class HandView extends BaseView
     private void placeIndicator(BaseView indicator)
     {
         indicator.setWidth(getHeight() / 4);
-        indicator.setHeight(getHeight() / 4);
+        if(mPassButton != indicator)
+            indicator.setHeight(getHeight() / 4);
 
         float xPos = 0;
         float yPos = 0;
